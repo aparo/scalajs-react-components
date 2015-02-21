@@ -8,26 +8,17 @@ import japgolly.scalajs.react.vdom.prefix_<^._
 
 
     
-object Jumbotron /* mixins: */{
+object Jumbotron {
 
-  case class State()
-
-  class Backend(t: BackendScope[Props, State]) {
-  }
 
   val component = ReactComponentB[Props]("Jumbotron")
-    .initialState(State())
-    .backend(new Backend(_))
-    .render((P, C, S, B) => {
-    /*
-    function() {
-      return (React.createElement("div", React.__spread(Map(), P, {className: joinClasses(P.className, "jumbotron")}), C))
-    }
-*/
+    .render((P, C) => {
+    <.div(P, ^.className := BootstrapCommon.joinClasses(P.className, "jumbotron"), C)
   }
     )
     .build
-    case class Props() extends BoostrapMixinProps
+    case class Props(className: String = "", bsClass: String = "", bsSize: String = "",
+                     bsStyle: String = "") extends BoostrapMixinProps
 def apply(ref: js.UndefOr[String] = "", key: js.Any = {})(children: ReactNode*)= {
    component.set(key, ref)(Props(),children)
 }
