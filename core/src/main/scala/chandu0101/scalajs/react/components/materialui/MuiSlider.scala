@@ -1,58 +1,78 @@
 package chandu0101.scalajs.react.components.materialui
 
-
-import chandu0101.scalajs.react.components.all._
-import chandu0101.scalajs.react.components.materialui.styles.MaterialUICss._
-import chandu0101.scalajs.react.components.util.CommonUtils._
 import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.all._
-import org.scalajs.dom.html
+import materialui.Mui
 
-
-
+import scala.scalajs.js
 
 /**
- * Created by chandrasekharkode .
+ *
+key: PropTypes.string,
+style: PropTypes.js.Any,
+ref: PropTypes.String,
+required: React.PropTypes.bool,
+    disabled: React.PropTypes.bool,
+    min: React.PropTypes.Double,
+    value: React.PropTypes.Double,
+    defaultValue: React.PropTypes.Double,
+    max: React.PropTypes.Double,
+    step: React.PropTypes.number,
+    error: React.PropTypes.string,
+    description: React.PropTypes.string,
+    name: React.PropTypes.string.isRequired,
+    onChange: React.PropTypes.(ReactEventH,Double) => Unit,
+    onFocus: React.PropTypes.func,
+    onBlur: React.PropTypes.func,
+    onDragStart: React.PropTypes.func,
+    onDragStop: React.PropTypes.func,
+
  */
+
+
+
 object MuiSlider {
 
-  case class Props(clsNames: CssClassType, value: Double, name: String, step: Int, description: String, onChange: REventIDoubleUnit, min: Int, max: Int, error: String, disabled: Boolean, required: Boolean)
+  def apply(onBlur : js.UndefOr[js.Function] = js.undefined ,
+            name : String ,
+            onDragStart : js.UndefOr[js.Function] = js.undefined ,
+            step : js.UndefOr[Int] = js.undefined,
+            style : js.UndefOr[js.Any] = js.undefined,
+            description : js.UndefOr[String] = js.undefined,
+            onChange : js.UndefOr[(ReactEventH,Double) => Unit] = js.undefined,
+            min : js.UndefOr[Double] = js.undefined,
+            ref : js.UndefOr[String] = js.undefined,
+            key : js.UndefOr[String] = js.undefined,
+            onDragStop : js.UndefOr[js.Function] = js.undefined ,
+            max : js.UndefOr[Double] = js.undefined,
+            error : js.UndefOr[String] = js.undefined,
+            onFocus : js.UndefOr[js.Function] = js.undefined ,
+            disabled : js.UndefOr[Boolean]=js.undefined,
+            required : js.UndefOr[Boolean]=js.undefined,
+            defaultValue : js.UndefOr[Double] = js.undefined,
+            value : js.UndefOr[Double] = js.undefined) = {
 
-  case class State(value: Double, percent: Double)
+    val p = js.Dynamic.literal()
+    onBlur.foreach(v => p.updateDynamic("onBlur")(v))
+    p.updateDynamic("name")(name)
+    onDragStart.foreach(v => p.updateDynamic("onDragStart")(v))
+    step.foreach(v => p.updateDynamic("step")(v))
+    style.foreach(v => p.updateDynamic("style")(v))
+    description.foreach(v => p.updateDynamic("description")(v))
+    onChange.foreach(v => p.updateDynamic("onChange")(v))
+    min.foreach(v => p.updateDynamic("min")(v))
+    ref.foreach(v => p.updateDynamic("ref")(v))
+    key.foreach(v => p.updateDynamic("key")(v))
+    onDragStop.foreach(v => p.updateDynamic("onDragStop")(v))
+    max.foreach(v => p.updateDynamic("max")(v))
+    error.foreach(v => p.updateDynamic("error")(v))
+    onFocus.foreach(v => p.updateDynamic("onFocus")(v))
+    disabled.foreach(v => p.updateDynamic("disabled")(v))
+    required.foreach(v => p.updateDynamic("required")(v))
+    defaultValue.foreach(v => p.updateDynamic("defaultValue")(v))
+    value.foreach(v => p.updateDynamic("value")(v))
 
-  class Backend(t: BackendScope[Props, State]) {
-
-     def onClick(e:ReactEventI) = ???
+    val f = React.asInstanceOf[js.Dynamic].createFactory(Mui.Slider)
+    f(p).asInstanceOf[ReactComponentU_]
   }
-
-  //Refs
-  val theTrackRef = Ref[html.Div]("theTrack")
-
-
-  val component = ReactComponentB[Props]("radioButton")
-    .initialStateP(p => State(p.value, p.value / p.max))
-    .backend(new Backend(_))
-    .render((P, S, B) => {
-       val classes = cssMapM(P.clsNames,(mui_input,true),(mui_error,!P.error.isEmpty))
-       val sliderClasses = cssMapM(P.clsNames,(mui_slider,true),(mui_slider_zero,S.percent == 0),(mui_disabled,P.disabled))
-       div(classSetM(classes))(
-         span(cls := mui_input_highlight),
-         span(cls := mui_input_bar),
-         span(cls := mui_input_description)(P.description),
-         span(cls := mui_input_error)(P.error),
-         div(classSetM(sliderClasses) , onClick ==> B.onClick)(
-          div( ref := theTrackRef , cls := mui_slider_track) (
-
-
-          )
-         )
-       )
-    })
-    .build
-
-  def apply(clsNames: CssClassType = Map(), value: Double = 0, name: String, step: Int = 0, description: String = "", onChange: REventIDoubleUnit = null, min: Int = 0, max: Int = 1, error: String = "", disabled: Boolean = false, required: Boolean = true) = {
-    component(Props(clsNames, value, name, step, description, onChange, min, max, error, disabled, required))
-  }
-
 
 }

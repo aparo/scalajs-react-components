@@ -1,58 +1,40 @@
 package chandu0101.scalajs.react.components.materialui
 
-import chandu0101.scalajs.react.components.all._
-import chandu0101.scalajs.react.components.materialui.styles.MaterialUICss._
-import chandu0101.scalajs.react.components.util.CommonUtils
 import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.all._
-import org.scalajs.dom.html
+import materialui.Mui
 
 import scala.scalajs.js
 
-
-
 /**
- * Created by chandrasekharkode .
- *    circle: React.PropTypes.bool,
-    innerClassName: React.PropTypes.string,
-    rounded: React.PropTypes.bool,
-    zDepth: React.PropTypes.oneOf([0,1,2,3,4,5])*
- */
-object MuiPaper {
-
-
-  val theInnerContainerRef = Ref[html.Element]("theInnerContainerRef")
-
-  class Backend(t: BackendScope[Props, _]) {
-    def getInnerContainer = theInnerContainerRef(t).get
+key: PropTypes.string,
+style: PropTypes.js.Any,
+ref: PropTypes.String,
+circle: React.PropTypes.bool,
+rounded: React.PropTypes.bool,
+zDepth: React.PropTypes.Int,
+transitionEnabled: React.PropTypes.bool
+  */
+case class MuiPaper(circle: js.UndefOr[Boolean] = js.undefined,
+                    style: js.UndefOr[js.Any] = js.undefined,
+                    rounded: js.UndefOr[Boolean] = js.undefined,
+                    ref: js.UndefOr[String] = js.undefined,
+                    transitionEnabled: js.UndefOr[Boolean] = js.undefined,
+                    zDepth: js.UndefOr[Int] = js.undefined,
+                    key: js.UndefOr[String] = js.undefined) {
+  def toJS = {
+    val p = js.Dynamic.literal()
+    circle.foreach(v => p.updateDynamic("circle")(v))
+    style.foreach(v => p.updateDynamic("style")(v))
+    rounded.foreach(v => p.updateDynamic("rounded")(v))
+    ref.foreach(v => p.updateDynamic("ref")(v))
+    transitionEnabled.foreach(v => p.updateDynamic("transitionEnabled")(v))
+    zDepth.foreach(v => p.updateDynamic("zDepth")(v))
+    key.foreach(v => p.updateDynamic("key")(v))
+    p
   }
 
-
-  val component = ReactComponentB[Props]("MuiPaper")
-    .stateless
-    .backend(new Backend(_))
-    .render((P, C, S, B) => {
-       val classes = CommonUtils.cssMap1M(mui_paper,
-         P.clsNames,
-        mui_z_depth.concat(P.zDepth.toString) -> true,
-        mui_rounded -> P.rounded,
-        mui_circle -> P.circle)
-       val innerClasses = CommonUtils.cssMapM(P.innerClassNames,
-        mui_paper_container -> true,
-        mui_z_depth_bottom -> true)
-         div(classSetM(classes), P.style!= null ?= P.style )(
-          div(classSetM(innerClasses) ,ref := theInnerContainerRef ) (
-           C
-          )
-         )
-      })
-    .build
-
-
-  case class Props(style : TagMod, circle : Boolean ,clsNames : CssClassType ,rounded : Boolean ,ref :  js.UndefOr[String] ,zDepth : Int ,key : js.Any ,innerClassNames : CssClassType  )
-
-  def apply(style : TagMod = null, circle : Boolean = false,clsNames : CssClassType = Map(),rounded : Boolean = true,ref :  js.UndefOr[String] = "",zDepth : Int = 1,key : js.Any = {},innerClassNames : CssClassType = Map()   )(children : ReactNode*) = component.set(key,ref)(Props(style,circle,clsNames,rounded,ref,zDepth,key,innerClassNames),children)
-
-
-
+  def apply(children: ReactNode*) = {
+    val f = React.asInstanceOf[js.Dynamic].createFactory(Mui.Paper)
+    f(toJS, children.toJsArray).asInstanceOf[ReactComponentU_]
+  }
 }

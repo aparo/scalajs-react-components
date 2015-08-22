@@ -6,18 +6,18 @@ import sbt._
 
 object ScalajsReactComponents extends Build {
 
-  val Scala211 = "2.11.5"
+  val Scala211 = "2.11.6"
 
-
-  val scalajsReactVersion = "0.8.0"
+  val scalajsReactVersion = "0.9.1"
+  val scalaCSSVersion = "0.3.0"
 
   type PE = Project => Project
 
   def commonSettings: PE =
     _.enablePlugins(ScalaJSPlugin)
       .settings(
-        organization       := "com.chandu0101.scalajs-react-components",
-        version            := "0.0.1-SNAPSHOT",
+        organization       := "com.github.chandu0101.scalajs-react-components",
+        version            := "0.2.0-SNAPSHOT",
         homepage           := Some(url("https://github.com/chandu0101/scalajs-react-components")),
         licenses           += ("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0")),
         scalaVersion       := Scala211,
@@ -44,7 +44,7 @@ object ScalajsReactComponents extends Build {
       },
       pomExtra :=
         <scm>
-          <connection>scm:git:github.com/japgolly/scalajs-react</connection>
+          <connection>scm:git:github.com:chandu0101/scalajs-react-components</connection>
           <developerConnection>scm:git:git@github.com:chandu0101/scalajs-react-components.git</developerConnection>
           <url>github.com:chandu0101/scalajs-react-components.git</url>
         </scm>
@@ -76,19 +76,16 @@ object ScalajsReactComponents extends Build {
 
   def useReact(scope: String = "compile"): PE =
     _.settings(
-      libraryDependencies += "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion,
-      jsDependencies ++= Seq("org.webjars" % "react" % "0.12.1" % scope / "react-with-addons.js" commonJSName "React"),
-      jsDependencies += ProvidedJS / "highlight.pack.js",
-      skip in packageJSDependencies := false)
+      libraryDependencies += "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion
+      )
 
-    val jsDir = "demo/js"
+    val jsDir = "demo/assets"
 
     def createLauncher(scope: String = "compile"): PE =
     _.settings(persistLauncher := true,
       persistLauncher in Test := false,
       crossTarget in (Compile, fullOptJS) := file(jsDir),
       crossTarget in (Compile, fastOptJS) := file(jsDir),
-      crossTarget in (Compile, packageJSDependencies) := file(jsDir),
 //      crossTarget in (Compile, packageLauncher) := file(jsDir),
       artifactPath in (Compile, fastOptJS) := ((crossTarget in (Compile, fastOptJS)).value /
         ((moduleName in fastOptJS).value + "-opt.js"))
@@ -114,7 +111,10 @@ object ScalajsReactComponents extends Build {
     .settings(
       name := "core",
       libraryDependencies ++= Seq(
-        "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion),
+        "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
+        "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion,
+        "com.github.japgolly.scalacss" %%% "core" % scalaCSSVersion,
+        "com.github.japgolly.scalacss" %%% "ext-react" % scalaCSSVersion),
       target in Compile in doc := baseDirectory.value / "docs"
     )
 

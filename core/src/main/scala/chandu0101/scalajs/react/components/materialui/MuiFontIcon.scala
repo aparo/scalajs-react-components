@@ -1,22 +1,35 @@
 package chandu0101.scalajs.react.components.materialui
 
-
 import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.all._
+import materialui.Mui
 
+import scala.scalajs.js
 
 /**
- * Created by chandrasekharkode on 2/7/15.
+ * key: PropTypes.string,
+style: PropTypes.js.Any,
+ref: PropTypes.String,
+className: React.PropTypes.string,
+    hoverColor: React.PropTypes.string
+
  */
 object MuiFontIcon {
 
+  def apply(style: js.UndefOr[js.Any] = js.undefined,
+            ref: js.UndefOr[String] = js.undefined,
+            key: js.UndefOr[String] = js.undefined,
+            className: js.UndefOr[String] = js.undefined,
+            hoverColor: js.UndefOr[String] = js.undefined) = {
 
-  val component = ReactComponentB[Props]("MuiFontIcon")
-    .render(P => {
-    span(cls := s"mui-font-icon ${P.className}", P.dynamicProps)
-  }).build
+    val p = js.Dynamic.literal()
+    style.foreach(v => p.updateDynamic("style")(v))
+    ref.foreach(v => p.updateDynamic("ref")(v))
+    key.foreach(v => p.updateDynamic("key")(v))
+    className.foreach(v => p.updateDynamic("className")(v))
+    hoverColor.foreach(v => p.updateDynamic("hoverColor")(v))
 
-  case class Props(className :String,dynamicProps: TagMod*)
+    val f = React.asInstanceOf[js.Dynamic].createFactory(Mui.FontIcon)
+    f(p).asInstanceOf[ReactComponentU_]
+  }
 
-  def apply(className : String,dynamicProps: TagMod*) = component(Props(className,dynamicProps))
 }

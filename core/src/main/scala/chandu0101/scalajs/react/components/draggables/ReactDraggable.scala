@@ -6,7 +6,7 @@ import chandu0101.scalajs.react.components.models.{RElementPosition, RGrid, RPoi
 import chandu0101.scalajs.react.components.util.DomUtil._
 import chandu0101.scalajs.react.components.util.Events
 import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.all._
+import japgolly.scalajs.react.vdom.prefix_<^._
 import org.scalajs.dom
 import org.scalajs.dom.Event
 
@@ -58,8 +58,8 @@ object ReactDraggable {
           // being selected all over the page.
           dom.document.body.className += " react-draggable-active"
           if(t.props.onStart != null) t.props.onStart(e,createUIEvent)
-          Events.on(dom.window,dragEventFor("move"),handleDrag_ref)
-          Events.on(dom.window,dragEventFor("end"),handleDragEnd_ref)
+          Events.on(dom.window,dragEventFor(e,"move"),handleDrag_ref)
+          Events.on(dom.window,dragEventFor(e,"end"),handleDragEnd_ref)
         }
       }
     }
@@ -106,8 +106,8 @@ object ReactDraggable {
           // Remove the body class used to disable user-select.
           g.document.body.className = g.document.body.className.replace(" react-draggable-active", "")
          if(t.props.onStop != null) t.props.onStop(e,createUIEvent)
-          Events.off(dom.window,dragEventFor("move"),handleDrag_ref)
-          Events.off(dom.window,dragEventFor("end"),handleDragEnd_ref)
+          Events.off(dom.window,dragEventFor(e,"move"),handleDrag_ref)
+          Events.off(dom.window,dragEventFor(e,"end"),handleDragEnd_ref)
        }
     }
 
@@ -117,7 +117,7 @@ object ReactDraggable {
 
     def positionToCSSTransform(left : Int, top : Int) = {
       val trans = s"translate(${left}px , ${top}px)"
-      Seq( transform := trans,mozTransform := trans , webkitTransform := trans , msTransform := trans)
+      Seq( ^.transform := trans,mozTransform := trans , webkitTransform := trans , msTransform := trans)
     }
   }
 
@@ -127,24 +127,14 @@ object ReactDraggable {
     .render((P,C,S, B) => {
       val topValue = if(B.canDragY) S.clientY else S.startY
       val leftValue = if(B.canDragX) S.clientX else S.startX
-      var stl : TagMod = Seq( top := topValue ,left := leftValue)
+      var stl : TagMod = Seq( ^.top := topValue ,^.left := leftValue)
       if(P.useCSSTransforms) stl = B.positionToCSSTransform(leftValue,topValue)
-      div(classSet1("react-draggable","react-draggable-dragging" -> S.dragging) ,stl)(
-       onMouseDown ==> B.handleDragStart,
-       onMouseUp ==> B.handleDragEnd
+     <.div(^.classSet1("react-draggable","react-draggable-dragging" -> S.dragging) ,stl)(
+       ^.onMouseDown ==> B.handleDragStart,^.onTouchStart ==> B.handleDragStart,
+       ^.onMouseUp ==> B.handleDragEnd,^.onTouchEnd ==> B.handleDragEnd
       )(
         C
       )
-
-//    val dClass = if(S.dragging) " react-draggable-dragging" else ""
-//       val stl2 = js.Dynamic.literal("top" -> topValue ,"left" -> leftValue)
-//        val newProps : Map[String,js.Any] = Map("style" -> stl2,
-//           "className"  ->  "react-draggable".concat(dClass),
-//           "onMouseDown" -> B.handleDragStart _,
-//           "onMouseUp" -> B.handleDragEnd _
-//          )
-//
-//        ReactCloneWithProps(React.Children.only(C),newProps)
     })
     .componentWillReceiveProps((scope,nextProps) => {
        if(nextProps.moveOnStartChange) scope.modState(_.copy(clientX = nextProps.start.x.toInt,clientY = nextProps.start.y.toInt))
