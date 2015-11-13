@@ -1,13 +1,8 @@
 package chandu0101.scalajs.react.components
 
 import japgolly.scalajs.react.{ReactNode, _}
-
 import scala.scalajs.js
 
-
-/**
- * Created by chandrasekharkode .
- */
 object ReactCloneWithProps {
 
   def mapToJS(props: Map[String, js.Any]): js.Object = {

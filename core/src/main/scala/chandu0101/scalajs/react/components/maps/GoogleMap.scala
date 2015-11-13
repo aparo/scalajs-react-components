@@ -1,23 +1,21 @@
-package chandu0101.scalajs.react.components.maps
+package chandu0101.scalajs.react.components
+package maps
 
 import chandu0101.scalajs.react.components.fascades._
 import chandu0101.scalajs.react.components.util.CommonUtils
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.prefix_<^._
 import org.scalajs.dom.{Event, document, html}
-
 import scala.scalajs.js
-import scala.scalajs.js.Dynamic.{global => g, literal => json, newInstance => jsnew}
+import scala.scalajs.js.Dynamic.{global => g}
 
-
-/**
- * Created by chandrasekharkode .
- */
 object GoogleMap {
 
-  case class State(loaded: Boolean)
+  case class State(mapObjects: Option[(GMap,GInfoWindow)] = Option.empty,
+                   markers: List[GMarker] = List())
 
   class Backend(t: BackendScope[Props, State]) {
+
 
     def loadScript() = {
       if (js.isUndefined(g.google) || (!js.isUndefined(g.google) && js.isUndefined(g.google.maps))) {
@@ -29,40 +27,49 @@ object GoogleMap {
       } else initialize()
     }
 
-    val gmarkers = List[GMarker]()
-
-    private def initialize(): Unit = {
+    def initialize(): Unit = {
       val map = new GMap(t.getDOMNode(), MapOptions(t.props.center, t.props.zoom).toGMapOptions)
-      val infowindow = new GInfoWindow()
-      if (t.props.markers.nonEmpty) {
-        t.props.markers.foreach(m => {
-          val marker = new GMarker(m.toGMarker(map))
-          if (!m.content.isEmpty) {
-            gmarkers.+:(marker)
-            new GAddListener(marker, "click", (e: Event) => {
-              infowindow.setContent(m.content)
-              infowindow.open(map, marker)
-            })
-          }
-        })
+      t.modState(_.copy(mapObjects = Option(map, new GInfoWindow())))
+      updateMap(t.props)
+    }
+
+    def updateMap(P:Props): Unit = {
+      t.state.mapObjects.foreach { case (gmap, infoWindow) =>
+        gmap.setCenter(P.center.toGlatlng)
+        t.state.markers.foreach(_.setMap(null))
+        val newMarkers = P.markers.map(prepareMarker(infoWindow, gmap)).toList
+        t.modState(_.copy(markers = newMarkers))
       }
     }
 
+    private def prepareMarker(infowindow: GInfoWindow, map:GMap)(m:Marker) = {
+      val marker = new GMarker(m.toGMarker(map))
+      if (!m.content.isEmpty) {
+        new GAddListener(marker, "click", (e: Event) => {
+          infowindow.setContent(m.content)
+          infowindow.open(map, marker)
+        })
+      }
+      marker
+    }
   }
 
-  case class Props(width : String , height : String,center: LatLng, zoom: Int, markers: Seq[Marker],url :String)
+  case class Props(width: String, height: String,center: LatLng, zoom: Int, markers: Seq[Marker],url :String)
 
   val component = ReactComponentB[Props]("googleMap")
-    .initialState(State(loaded = false))
+    .initialState(State())
     .backend(new Backend(_))
     .render((P, S, B) => {
      <.div(^.height := P.height, ^.width := P.width)
     })
+    .componentWillReceiveProps((scope, newProps) => {
+      scope.backend.updateMap(newProps)
+    })
     .componentDidMount(scope => {
-      scope.backend.loadScript
+      scope.backend.loadScript()
     })
     .componentWillUnmount(scope => {
-      scope.backend.gmarkers.foreach(new GClearInstanceListeners(_))
+      scope.state.markers.foreach(new GClearInstanceListeners(_))
     })
     .build
 
@@ -77,6 +84,6 @@ object GoogleMap {
    *              you can override if you want .
    * @return
    */
-  def apply(width : String = "500px" , height : String = "500px", center: LatLng, zoom: Int = 4, markers: List[Marker] = Nil,url : String = "https://maps.googleapis.com/maps/api/js") = component(Props(width,height,center, zoom, markers,url))
+  def apply(width: String = "500px", height: String = "500px", center: LatLng, zoom: Int = 4, markers: List[Marker] = Nil,url: String = "https://maps.googleapis.com/maps/api/js") = component(Props(width,height,center, zoom, markers,url))
 
 }

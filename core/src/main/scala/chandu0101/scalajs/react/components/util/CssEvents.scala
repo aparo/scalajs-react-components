@@ -1,14 +1,11 @@
-package chandu0101.scalajs.react.components.util
+package chandu0101.scalajs.react.components
+package util
 
 import japgolly.scalajs.react.TopNode
 import org.scalajs.dom.Event
-
 import scala.scalajs.js
 import scala.scalajs.js.Dynamic.{global => g}
 
-/**
- * Created by chandrasekharkode .
- */
 object CssEvents {
 
   def testSupportedProps(props: Map[String, String]) = {

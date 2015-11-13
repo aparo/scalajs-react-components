@@ -1,12 +1,6 @@
-package chandu0101.scalajs.react.components.util
+package chandu0101.scalajs.react.components
+package util
 
-
-import chandu0101.scalajs.react.components.all._
-
-
-/**
- * Created by chandrasekharkode .
- */
 object CommonUtils {
 
   def cssMapM(map: CssClassType, ps: (String, Boolean)*) = map.++(ps)

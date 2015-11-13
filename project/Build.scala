@@ -6,7 +6,7 @@ import sbt._
 
 object ScalajsReactComponents extends Build {
 
-  val Scala211 = "2.11.6"
+  val Scala211 = "2.11.7"
 
   val scalajsReactVersion = "0.9.2"
   val scalaCSSVersion = "0.3.0"
@@ -16,15 +16,20 @@ object ScalajsReactComponents extends Build {
   def commonSettings: PE =
     _.enablePlugins(ScalaJSPlugin)
       .settings(
-        organization       := "com.github.chandu0101.scalajs-react-components",
-        version            := "0.2.0-SNAPSHOT",
-        homepage           := Some(url("https://github.com/chandu0101/scalajs-react-components")),
-        licenses           += ("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0")),
-        scalaVersion       := Scala211,
-        scalacOptions     ++= Seq("-deprecation", "-unchecked", "-feature",
-                                "-language:postfixOps", "-language:implicitConversions",
-                                "-language:higherKinds", "-language:existentials"),
-        updateOptions      := updateOptions.value.withConsolidatedResolution(true))
+        organization         := "com.github.chandu0101.scalajs-react-components",
+        version              := "0.2.0-SNAPSHOT",
+        homepage             := Some(url("https://github.com/chandu0101/scalajs-react-components")),
+        licenses             += ("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0")),
+        scalaVersion         := Scala211,
+        scalacOptions       ++= Seq("-deprecation", "-unchecked", "-feature",
+                                  "-language:postfixOps", "-language:implicitConversions",
+                                  "-language:higherKinds", "-language:existentials"),
+        updateOptions        := updateOptions.value.withCachedResolution(true),
+        dependencyOverrides ++= Set(
+          "org.scala-lang" %  "scala-reflect"          % scalaVersion.value,
+          "org.scala-js"   %% "scalajs-test-interface" % "0.6.5"
+        )
+      )
 
   def preventPublication: PE =
     _.settings(
@@ -98,7 +103,7 @@ object ScalajsReactComponents extends Build {
 
   // ==============================================================================================
   lazy val root = Project("root", file("."))
-    .aggregate(core, demo)
+    .aggregate(macros, core, demo)
     .configure(commonSettings, preventPublication, addCommandAliases(
       "t"  -> "; test:compile ; test/test",
       "tt" -> ";+test:compile ;+test/test",
@@ -106,8 +111,20 @@ object ScalajsReactComponents extends Build {
       "TT" -> ";+clean ;tt"))
 
   // ==============================================================================================
+
+  lazy val macros = project
+    .configure(commonSettings, utestSettings, preventPublication)
+    .settings(
+      name := "macros",
+      libraryDependencies ++= Seq(
+        "org.scalatest" %%% "scalatest" % "3.0.0-M6" % Test
+      )
+    )
+
+  // ==============================================================================================
   lazy val core = project
     .configure(commonSettings, publicationSettings)
+    .dependsOn(macros)
     .settings(
       name := "core",
       libraryDependencies ++= Seq(
@@ -117,7 +134,6 @@ object ScalajsReactComponents extends Build {
         "com.github.japgolly.scalacss" %%% "ext-react" % scalaCSSVersion),
       target in Compile in doc := baseDirectory.value / "docs"
     )
-
 
   // ==============================================================================================
   lazy val demo = project

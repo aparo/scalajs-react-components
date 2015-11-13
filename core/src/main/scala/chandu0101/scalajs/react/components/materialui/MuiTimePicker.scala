@@ -1,60 +1,31 @@
-package chandu0101.scalajs.react.components.materialui
+package chandu0101.scalajs.react.components
+package materialui
 
 import japgolly.scalajs.react._
-import materialui.Mui
-
 import scala.scalajs.js
 import scala.scalajs.js.{Date => JDate}
 
+case class MuiTimePicker(format: U[MuiTimePickerFormat] = uNone,
+                         onDismiss: U[() => Unit] = uNone,
+                         onShow: U[() => Unit] = uNone,
+                         style: U[js.Any] = uNone,
+                         onChange: U[(JDate, JDate) => Unit] = uNone,
+                         ref: U[String] = uNone,
+                         hintText: U[String] = uNone,
+                         key: U[String] = uNone,
+                         defaultTime: U[JDate] = uNone,
+                         onTouchTap: U[ReactEventI => Unit] = uNone,
+                         onFocus: U[ReactEventI => Unit] = uNone) {
 
-/**
- * key: PropTypes.string,
-style: PropTypes.js.Any,
-ref: PropTypes.String,
-hintText: PropTypes.String,
- defaultTime: React.PropTypes.JDate,
-    format: React.PropTypes.MuiTimePickerFormat,
-    onFocus: React.PropTypes.ReactEventI => Unit,
-    onTouchTap: React.PropTypes.ReactEventI => Unit,
-    onChange: React.PropTypes.(JDate,JDate) => Unit,
-    onShow: React.PropTypes.() => Unit,
-    onDismiss: React.PropTypes.() => Unit,
- */
-object MuiTimePicker {
-
-  def apply(format: js.UndefOr[MuiTimePickerFormat] = js.undefined,
-            onDismiss: js.UndefOr[() => Unit] = js.undefined,
-            onShow: js.UndefOr[() => Unit] = js.undefined,
-            style: js.UndefOr[js.Any] = js.undefined,
-            onChange: js.UndefOr[(JDate, JDate) => Unit] = js.undefined,
-            ref: js.UndefOr[String] = js.undefined,
-            hintText: js.UndefOr[String] = js.undefined,
-            key: js.UndefOr[String] = js.undefined,
-            defaultTime: js.UndefOr[JDate] = js.undefined,
-            onTouchTap: js.UndefOr[ReactEventI => Unit] = js.undefined,
-            onFocus: js.UndefOr[ReactEventI => Unit] = js.undefined) = {
-
-    val p = js.Dynamic.literal()
-    format.foreach(v => p.updateDynamic("format")(v.format))
-    onDismiss.foreach(v => p.updateDynamic("onDismiss")(v))
-    onShow.foreach(v => p.updateDynamic("onShow")(v))
-    style.foreach(v => p.updateDynamic("style")(v))
-    onChange.foreach(v => p.updateDynamic("onChange")(v))
-    ref.foreach(v => p.updateDynamic("ref")(v))
-    hintText.foreach(v => p.updateDynamic("hintText")(v))
-    key.foreach(v => p.updateDynamic("key")(v))
-    defaultTime.foreach(v => p.updateDynamic("defaultTime")(v))
-    onTouchTap.foreach(v => p.updateDynamic("onTouchTap")(v))
-    onFocus.foreach(v => p.updateDynamic("onFocus")(v))
-
+  def apply() = {
+    val props = JSMacro[MuiTimePicker](this)
     val f = React.asInstanceOf[js.Dynamic].createFactory(Mui.TimePicker)
-    f(p).asInstanceOf[ReactComponentU_]
+    f(props).asInstanceOf[ReactComponentU_]
   }
 
 }
 
-
-class MuiTimePickerFormat private(val format: String) extends AnyVal
+case class MuiTimePickerFormat(val value: String) extends AnyVal
 
 object MuiTimePickerFormat {
 
@@ -63,5 +34,4 @@ object MuiTimePickerFormat {
   val TWENTY_FOUR_HOUR = new MuiTimePickerFormat("24hr")
 
   def newFormat(format: String) = new MuiTimePickerFormat(format)
-
 }

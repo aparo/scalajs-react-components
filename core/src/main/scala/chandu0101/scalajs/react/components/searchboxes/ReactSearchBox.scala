@@ -1,23 +1,13 @@
-package chandu0101.scalajs.react.components.searchboxes
+package chandu0101.scalajs.react.components
+package searchboxes
 
-
-import chandu0101.scalajs.react.components.all._
-import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.prefix_<^._
-
-import scala.scalajs.js
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.prefix_<^._
 import scala.scalajs.js
-import scala.scalajs.js
-import scala.scalajs.js.undefined
-import scala.scalajs.js.UndefOr
 import scalacss.Defaults._
 import scalacss.ScalaCssReact._
 
-
 object ReactSearchBox {
-
 
   class Style extends StyleSheet.Inline {
 
@@ -37,7 +27,6 @@ object ReactSearchBox {
       )
     )
   }
-
 
   class Backend(t: BackendScope[Props, _]) {
     def onTextChange(e: ReactEventI) = {
@@ -61,7 +50,6 @@ object ReactSearchBox {
 
   case class Props(onTextChange: String => Unit, style: Style)
 
-
-  def apply(onTextChange: String => Unit, style: Style = DefaultStyle, ref: js.UndefOr[String] = "", key: js.Any = {}) = component.set(key, ref)(Props(onTextChange,style))
+  def apply(onTextChange: String => Unit, style: Style = DefaultStyle, ref: U[String] = "", key: js.Any = {}) = component.set(key, ref)(Props(onTextChange,style))
 
 }

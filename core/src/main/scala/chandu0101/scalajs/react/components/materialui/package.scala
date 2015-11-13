@@ -1,11 +1,12 @@
-import japgolly.scalajs.react.{React, ReactComponentSpec, TopNode}
+package chandu0101.scalajs.react.components
 
+import japgolly.scalajs.react.{React, ReactComponentSpec, TopNode}
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSName
 
 package object materialui {
 
-  @JSName("mui")
+  @js.native @JSName("mui")
   object Mui extends js.Object {
 
     val AppBar: js.Dynamic = js.native
@@ -56,6 +57,7 @@ package object materialui {
 
   }
 
+  @js.native
   trait MuiUtil extends js.Object {
     val CssEvent: js.Dynamic = js.native
     val Dom: js.Dynamic = js.native
@@ -67,6 +69,7 @@ package object materialui {
     val UniqueId: js.Dynamic = js.native
   }
 
+  @js.native
   trait MuiStyles extends js.Object {
     val AutoPrefix: js.Dynamic = js.native
     val Colors: js.Dynamic = js.native
@@ -76,6 +79,7 @@ package object materialui {
     val Transitions: js.Dynamic = js.native
   }
 
+  @js.native
   trait ThemeManager extends js.Object {
 
     def getCurrentTheme(): js.Dynamic = js.native
@@ -89,14 +93,16 @@ package object materialui {
     val types :js.Dynamic = js.native
   }
 
-  lazy val ThemeManager = js.Dynamic.newInstance(Mui.Styles.ThemeManager)().asInstanceOf[ThemeManager]
+  // I'm getting this error when the val is named ThemeManager:
+  // scalajs-react-components\core\src\main\scala\chandu0101\scalajs\react\components\materialui\package.scala:96:
+  // ThemeManager is already defined as (compiler-generated) case class companion object ThemeManager
+  lazy val themeManager = js.Dynamic.newInstance(Mui.Styles.ThemeManager)().asInstanceOf[ThemeManager]
 
   def installMuiContext[P, S, B, N <: TopNode]: ReactComponentSpec[P, S, B, N] => Unit =
     spec => {
       val t = spec.asInstanceOf[js.Dynamic]
       t.updateDynamic("childContextTypes")(js.Dynamic.literal("muiTheme" -> React.asInstanceOf[js.Dynamic].PropTypes.`object`): js.Object)
-      t.updateDynamic("getChildContext")((() => js.Dynamic.literal("muiTheme" -> ThemeManager.getCurrentTheme())): js.Function)
+      t.updateDynamic("getChildContext")((() => js.Dynamic.literal("muiTheme" -> themeManager.getCurrentTheme())): js.Function)
     }
-
 
 }
