@@ -21,4 +21,5 @@ final class RefHolder[N]{
 
   val invalidate: Unit =
     Callback(r = js.undefined)
+    //r = js.undefined
 }

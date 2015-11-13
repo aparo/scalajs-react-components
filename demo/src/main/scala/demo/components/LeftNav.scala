@@ -37,21 +37,18 @@ object LeftNav {
 
   case class Props(menus: List[LeftRoute], selectedPage: LeftRoute, ctrl: RouterCtl[LeftRoute])
 
-  //  implicit val currentPageReuse = Reusability.by_==[LeftRoute]
-  //  implicit val propsReuse = Reusability.by((_: Props).selectedPage)
   case class Backend($: BackendScope[Props, _]){
     def render(P: Props) = {
-      <.ul(Style.container)(
-        P.menus.map(item => <.li(^.key := item.name,
-          Style.menuItem(item == P.selectedPage),
-          item.name,
-          P.ctrl setOnClick item))
-      )
+    <.ul(Style.container)(
+      P.menus.map(item => <.li(^.key := item.name,
+        Style.menuItem(item == P.selectedPage),
+        item.name,
+        P.ctrl setOnClick item))
+    )
     }
   }
   val component = ReactComponentB[Props]("LeftNav")
     .renderBackend[Backend]
-    //    .configure(Reusability.shouldComponentUpdate)
     .build
 
   def apply(menus: List[LeftRoute], selectedPage: LeftRoute, ctrl: RouterCtl[LeftRoute], ref: UndefOr[String] = "", key: js.Any = {}) = component.set(key, ref)(Props(menus, selectedPage, ctrl))
