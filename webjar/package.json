@@ -1,0 +1,48 @@
+{
+  "name": "react-components",
+  "version": "0.1.0",
+  "description": "React Compoenents for ScalaJS",
+  "author": "Janos Haber",
+  "license": "MIT",
+  "homepage": "https://github.com/b0c1/scalajs-react-components#readme",
+  "main": "react-components-bundle.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/b0c1/scalajs-react-components.git"
+  },
+  "keywords": [
+    "react",
+    "material-ui"
+  ],
+  "scripts": {
+    "start": "webpack --watch & webpack-dev-server --progress --colors --port 8090",
+    "build": "webpack --config webpack.config.prod.js"
+  },
+  "devDependencies": {
+    "compression-webpack-plugin": "^0.2.0",
+    "css-loader": "^0.14.5",
+    "file-loader": "^0.8.4",
+    "gulp-decompress": "^1.1.0",
+    "image-webpack-loader": "^1.6.1",
+    "imagemin": "^3.2.0",
+    "lodash": "^3.9.3",
+    "node-libs-browser": "^0.5.2",
+    "react-hot-loader": "^1.2.7",
+    "style-loader": "^0.12.3",
+    "url-loader": "^0.5.6",
+    "webpack": "^1.9.10",
+    "webpack-dev-server": "^1.9.0"
+  },
+  "dependencies": {
+    "material-ui": "v0.13.0",
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0-0",
+    "react-geomicons": "^2.0.4",
+    "react-infinite": "^0.5.7",
+    "react-select": "^0.8.1",
+    "react-spinner": "^0.2.2",
+    "react-tagsinput": "^2.0.0",
+    "react-tap-event-plugin": "^0.2.1",
+    "svg-loader": "0.0.2"
+  }
+}
