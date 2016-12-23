@@ -4,14 +4,14 @@ package materialui
 
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.prefix_<^._
+
 import scala.scalajs.js
 import scalacss.Defaults._
 import scalacss.ScalaCssReact._
-import scalacss.mutable.StyleSheet.Inline
 
 object MobileTearSheet {
 
-  object Style extends Inline {
+  object Style extends StyleSheet.Inline {
 
     import dsl._
 
@@ -21,18 +21,20 @@ object MobileTearSheet {
       width(360 px)
     )
 
-    val container = style(border :=! "solid 1px #d9d9d9",
-      borderBottom :=! "none",
+    val container = style(
+      border :=! "solid 1px #d9d9d9",
       height :=! "500px",
-      overflow.hidden)
+      overflow.hidden
+    )
 
     val bottomTear = style(display.block,
       position.relative,
       marginTop :=! "-10px",
-      width(360 px))
+      width(360 px)
+    )
   }
 
-  case class Backend($: BackendScope[Unit, _]){
+  case class Backend($: BackendScope[Unit, _]) {
     def render(C: PropsChildren) = {
       <.div(Style.root,
         <.div(Style.container,
@@ -45,7 +47,7 @@ object MobileTearSheet {
 
   val component = ReactComponentB[Unit]("MobileTearSheet")
     .renderBackend[Backend]
-    .buildU
+    .build
 
-  def apply(children: ReactNode*) = component(children)
+  def apply(children: ReactNode*) = component(children :_*)
 }

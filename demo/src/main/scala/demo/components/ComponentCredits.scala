@@ -1,11 +1,11 @@
 package demo
 package components
 
-import chandu0101.scalajs.react.components.models.Github
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.prefix_<^._
 import org.scalajs.dom.ext.Ajax
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.{Date, JSON}
 
@@ -19,20 +19,21 @@ object ComponentCredits {
       else
       <.div(
         <.h4("Author: "),
-        GithubUser(S.users.head),
+        S.users.headOption.map(GithubUser(_)),
         <.h4("Contributors: "),
        <.div(^.marginRight := "10px")(S.users.tail.map(u => GithubUser(user = u, key = u.login)))
        )
 
     }
-
   }
 
-  val component = ReactComponentB[Props]("ComponentCredits")
+  val component =
+    ReactComponentB[Props]("ComponentCredits")
     .initialState(State(List()))
-    .renderBackend[Backend].componentDidMount(
-    scope => Callback{
-      val url = s"https://api.github.com/repos/chandu0101/scalajs-react-components/commits?path=${scope.props.filePath }"
+    .renderBackend[Backend]
+    .componentDidMount(
+    $ => Callback{
+      val url = s"https://api.github.com/repos/chandu0101/scalajs-react-components/commits?path=${$.props.filePath}"
       Ajax.get(url).onSuccess {
         case xhr =>
           if (xhr.status == 200) {
@@ -47,7 +48,10 @@ object ComponentCredits {
             ).toList.groupBy(_.login).map {
               case (id, objlist) => objlist.minBy(_.time)
             }.toSet.toList
-            scope.modState(_.copy(users = users.sortBy(_.time))).runNow()
+
+            $.modState(_.copy(users = users.sortBy(_.time)))
+              .when($.isMounted())
+              .runNow()
           }
       }
     }

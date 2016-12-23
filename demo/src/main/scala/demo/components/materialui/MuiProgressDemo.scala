@@ -2,32 +2,29 @@ package demo
 package components
 package materialui
 
+import chandu0101.macros.tojs.GhPagesMacros
 import chandu0101.scalajs.react.components.materialui._
 import japgolly.scalajs.react.ReactComponentB
 import japgolly.scalajs.react.vdom.prefix_<^._
 
 object MuiProgressDemo {
 
-  val code =
-    """
-      | MuiCircularProgress(mode = MuiProgressMode.DETERMINATE ,value = 50),
-      | MuiCircularProgress(mode = MuiProgressMode.INDETERMINATE),
-      | MuiCircularProgress(mode = MuiProgressMode.INDETERMINATE,size = 2),
-      | MuiLinearProgress(mode = MuiProgressMode.INDETERMINATE ,size = 1.5)
-      |
-    """.stripMargin
+  val code = GhPagesMacros.exampleSource
+
+  // EXAMPLE:START
   val component = ReactComponentB[Unit]("MuiProgressDemo")
     .render(P => {
-    <.div(
-      CodeExample(code, "Progress Bars")(
-        MuiCircularProgress(mode = MuiCircularProgressMode.DETERMINATE ,value = 50)(),
-        MuiCircularProgress(mode = MuiCircularProgressMode.INDETERMINATE)(),
-        MuiCircularProgress(mode = MuiCircularProgressMode.INDETERMINATE,size = 2)(),
-        MuiLinearProgress(mode = MuiLinearProgressMode.INDETERMINATE ,size = 1.5)()
+      <.div(
+        CodeExample(code, "Progress Bars")(
+          MuiCircularProgress(mode = DeterminateIndeterminate.determinate, value = 50.0)(),
+          MuiCircularProgress(mode = DeterminateIndeterminate.indeterminate, size = 0.5)(),
+          MuiCircularProgress(mode = DeterminateIndeterminate.indeterminate)(),
+          MuiCircularProgress(mode = DeterminateIndeterminate.indeterminate, size = 2.0)(),
+          MuiLinearProgress(mode = DeterminateIndeterminate.indeterminate)()
+        )
       )
-    )
-  }).buildU
+    }).build
+  // EXAMPLE:END
 
   def apply() = component()
-
 }

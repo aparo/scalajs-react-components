@@ -2,10 +2,15 @@ package demo
 package components
 package reacttable
 
-import japgolly.scalajs.react.{BackendScope, ReactComponentB}
+import chandu0101.macros.tojs.GhPagesMacros
 import japgolly.scalajs.react.vdom.prefix_<^._
+import japgolly.scalajs.react.{BackendScope, ReactComponentB}
 
 object ReactTableInfo {
+  val code = GhPagesMacros.exampleSource
+
+  // EXAMPLE:START
+
   case class Backend($: BackendScope[_, _]){
     def render =
       InfoTemplate(componentFilePath = "/tables/ReactTable.scala",scalacss = true)(
@@ -26,7 +31,9 @@ object ReactTableInfo {
 
   val component = ReactComponentB[Unit]("ReactTableInfo")
     .renderBackend[Backend]
-    .buildU
+    .build
+
+  // EXAMPLE:END
 
   def apply() = component()
 }

@@ -4,38 +4,47 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import sbt.Keys._
 import sbt._
 
-object ScalajsReactComponents extends Build {
+object Build extends Build {
 
-  val Scala211 = "2.11.7"
+  val Scala211 = "2.11.8"
+  val Scala212 = "2.12.0"
 
-  val scalajsReactVersion = "0.10.0"
-  val scalaCSSVersion = "0.3.1"
+  val scalajsReactVersion = "0.11.3"
+  val scalaCSSVersion = "0.5.1"
 
   type PE = Project => Project
 
   def commonSettings: PE =
     _.enablePlugins(ScalaJSPlugin)
       .settings(
+	crossScalaVersions   := Seq(Scala211, Scala212),
         organization         := "com.github.chandu0101.scalajs-react-components",
-        version              := "0.2.0-SNAPSHOT",
+        version              := "0.5.0",
         homepage             := Some(url("https://github.com/chandu0101/scalajs-react-components")),
         licenses             += ("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0")),
-        scalaVersion         := Scala211,
+        scalaVersion         := Scala212,
         scalacOptions       ++= Seq("-deprecation", "-unchecked", "-feature",
                                   "-language:postfixOps", "-language:implicitConversions",
                                   "-language:higherKinds", "-language:existentials"), //"-Ymacro-debug-lite"
         updateOptions        := updateOptions.value.withCachedResolution(true),
         dependencyOverrides ++= Set(
-          "org.scala-lang" %  "scala-reflect"          % scalaVersion.value,
-          "org.scala-js"   %% "scalajs-test-interface" % "0.6.5"
+          "org.scala-js"   %% "scalajs-test-interface" % "0.6.13"
         )
       )
+
+  def definesMacros: Project => Project =
+    _.settings(
+      scalacOptions += "-language:experimental.macros",
+      libraryDependencies ++= Seq(
+        "org.scala-lang" % "scala-reflect" % Scala212,
+        "org.scala-lang" % "scala-compiler" % Scala212 % Provided))
 
   def preventPublication: PE =
     _.settings(
       publishArtifact := false,
       publishLocalSigned := (),       // doesn't work
       publishSigned := (),            // doesn't work
+      publish := (),
       packagedArtifacts := Map.empty) // doesn't work - https://github.com/sbt/sbt-pgp/issues/42
 
   def publicationSettings: PE =
@@ -58,6 +67,10 @@ object ScalajsReactComponents extends Build {
             <id>chandu0101</id>
             <name>Chandra Sekhar Kode</name>
           </developer>
+          <developer>
+            <id>elacin</id>
+            <name>Øyvind Raddum Berg</name>
+          </developer>
         </developers>)
     .configure(sourceMapsToGithub)
 
@@ -71,18 +84,17 @@ object ScalajsReactComponents extends Build {
     )
 
   def utestSettings: PE =
-      _.configure(useReact("test"))
-      .settings(
-      libraryDependencies  += "com.lihaoyi" %%% "utest" % "0.3.0",
+      _.settings(
+      libraryDependencies  += "com.lihaoyi" %%% "utest" % "0.4.4" % Test,
       testFrameworks       += new TestFramework("utest.runner.Framework"),
       scalaJSStage in Test := FastOptStage,
       requiresDOM          := true,
       jsEnv in Test        := PhantomJSEnv().value)
 
-  def useReact(scope: String = "compile"): PE =
+  def useReact(scope: Configuration = Compile): PE =
     _.settings(
-      libraryDependencies += "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion
-      )
+      libraryDependencies += "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion % scope
+    )
 
     val jsDir = "demo/assets"
 
@@ -102,42 +114,41 @@ object ScalajsReactComponents extends Build {
   }
 
   // ==============================================================================================
-  lazy val root = Project("root", file("."))
-    .aggregate(macros, core, demo)
-    .configure(commonSettings, preventPublication, addCommandAliases(
-      "t"  -> "; test:compile ; test/test",
-      "tt" -> ";+test:compile ;+test/test",
-      "T"  -> "; clean ;t",
-      "TT" -> ";+clean ;tt"))
-
-  // ==============================================================================================
 
   lazy val macros = project
-    .configure(commonSettings, utestSettings, publicationSettings)
+    .configure(commonSettings, utestSettings, publicationSettings, definesMacros, useReact())
     .settings(
       name := "macros",
       libraryDependencies ++= Seq(
-        "org.scalatest" %%% "scalatest" % "3.0.0-M7" % Test
+        "org.scalatest" %%% "scalatest" % "3.0.1" % Test
       )
     )
 
   // ==============================================================================================
   lazy val core = project
-    .configure(commonSettings, publicationSettings)
+    .configure(commonSettings, publicationSettings, useReact())
     .dependsOn(macros)
     .settings(
       name := "core",
       libraryDependencies ++= Seq(
-        "com.github.japgolly.scalajs-react" %%% "core" % scalajsReactVersion,
-        "com.github.japgolly.scalajs-react" %%% "extra" % scalajsReactVersion,
-        "com.github.japgolly.scalacss" %%% "core" % scalaCSSVersion,
-        "com.github.japgolly.scalacss" %%% "ext-react" % scalaCSSVersion),
+        "com.github.japgolly.scalacss"      %%% "core"     % scalaCSSVersion,
+        "com.github.japgolly.scalacss"      %%% "ext-react" % scalaCSSVersion
+      ),
       target in Compile in doc := baseDirectory.value / "docs"
     )
 
   // ==============================================================================================
   lazy val demo = project
     .dependsOn(core)
-    .configure(commonSettings,createLauncher(), useReact(), preventPublication)
+    .configure(commonSettings, createLauncher(), preventPublication)
 
+  // ==============================================================================================
+  lazy val root = Project("root", file("."))
+    .aggregate(macros, core, demo)
+    .configure(commonSettings, preventPublication, addCommandAliases(
+      "t"  -> "; test:compile ; test/test",
+      "tt" -> ";+test:compile ;+test/test",
+      "T"  -> "; clean ;t",
+      "TT" -> ";+clean ;tt")
+    )
 }

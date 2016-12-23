@@ -1,11 +1,11 @@
 package demo
 package components
 
-import chandu0101.scalajs.react.components._
 import demo.routes.AppRouter.Page
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.extra.router.RouterCtl
 import japgolly.scalajs.react.vdom.prefix_<^._
+
 import scala.scalajs.js
 
 object ComponentGridItem {
@@ -14,7 +14,7 @@ object ComponentGridItem {
 
     val item = Seq(^.margin := "30px",
       ^.maxWidth := "250px",
-       cursorPointer,
+      ^.cursor := "pointer",
       ^.boxShadow := "0 1px 3px rgba(85, 89, 88, 0.24)"
     )
 
@@ -22,10 +22,10 @@ object ComponentGridItem {
       ^.color := "rgba(0, 0, 0, 0.87)",
       ^.fontSize := "18px",
       ^.fontWeight := "500",
-      ^.letterSpacing := "0",
+      ^.letterSpacing := "0px",
       ^.lineHeight := "54px",
-      ^.margin := "0",
-      ^.padding := "0",
+      ^.margin := "0px",
+      ^.padding := "0px",
       ^.textAlign := "center")
 
     val itemImage = Seq(^.maxHeight := "250px",
@@ -41,18 +41,28 @@ object ComponentGridItem {
 
   class Backend(t: BackendScope[Props, State]) {
 
-    def onMouseOver() = t.modState(_.copy(itemHover = true))
+    val onMouseOver = t.modState(_.copy(itemHover = true))
 
-    def onMouseOut() = t.modState(_.copy(itemHover = false))
+    val onMouseOut = t.modState(_.copy(itemHover = false))
 
-    def render(P: Props, S: State) = {
-      <.div(Style.item, S.itemHover ?= Style.itemHover,P.ctrl setOnClick P.route,
-        onMouseEnter --> onMouseOver, onMouseLeave --> onMouseOut)(
-        <.h3(Style.itemTitle, ^.key := P.heading)(P.heading),
-        <.img(^.src := P.img, Style.itemImage, ^.key := "alink")
-       )
-
-    }
+    def render(P: Props, S: State) =
+      <.div(
+        Style.item,
+        S.itemHover ?= Style.itemHover,
+        P.ctrl setOnClick P.route,
+        ^.onMouseEnter --> onMouseOver,
+        ^.onMouseLeave --> onMouseOut,
+        <.h3(
+          Style.itemTitle,
+          ^.key := P.heading,
+          P.heading
+        ),
+        <.img(
+          ^.src := P.img,
+          Style.itemImage,
+          ^.key := "alink"
+        )
+      )
   }
 
   val component = ReactComponentB[Props]("ComponentGridElement")
@@ -60,7 +70,7 @@ object ComponentGridItem {
     .renderBackend[Backend]
     .build
 
-  case class Props(heading: String, route: Page, img: String,ctrl: RouterCtl[Page])
+  case class Props(heading: String, route: Page, img: String, ctrl: RouterCtl[Page])
 
-  def apply(heading: String, route: Page, img: String,ctrl: RouterCtl[Page], ref: js.UndefOr[String] = "", key: js.Any = {}) = component.set(key, ref)(Props(heading, route, img,ctrl))
+  def apply(heading: String, route: Page, img: String, ctrl: RouterCtl[Page], ref: js.UndefOr[String] = "", key: js.Any = {}) = component.set(key, ref)(Props(heading, route, img, ctrl))
 }

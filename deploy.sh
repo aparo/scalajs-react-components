@@ -7,6 +7,7 @@
 comment="$1"
 
 rm -rf demo/assets
+rm -rf demo/node_modules
 
 sbt clean
 
@@ -14,11 +15,13 @@ sbt fullOptJS
 
 cd demo
 
+yarn install
+
 npm run build
 
 
 if [ "$comment" == "" ]; then
-comment="push form CI"
+comment="push from CI"
 echo "no comment specified to deploy, using default : $comment"
 fi
 

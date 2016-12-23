@@ -2,49 +2,59 @@ package demo
 package components
 package materialui
 
-import chandu0101.scalajs.react.components._
+import chandu0101.macros.tojs.GhPagesMacros
 import chandu0101.scalajs.react.components.materialui._
 import japgolly.scalajs.react._
 import org.scalajs.dom
 
 object MuiSnackbarDemo {
-  val code =
-    """
-      |  MuiSnackBar(message = " Event added to your calender",
-      |          action = "undo",
-      |          ref = "snackbar",
-      |          onActionTouchTap = B.handleAction _)
-      |
-    """.stripMargin
+  val code = GhPagesMacros.exampleSource
 
-  class Backend(t: BackendScope[_,_]) {
-    val snackBarRef = RefHolder[MuiSnackbarM]
+  // EXAMPLE:START
 
-    val handleAction: ReactEvent => Callback =
-      e ⇒ Callback(dom.window.alert("We removed Event from your cal"))
+  class Backend($: BackendScope[_, Boolean]) {
+    val close = $.setState(false)
+    val open  = $.setState(true)
 
-    val buttonClick: ReactEventH => Callback =
-      e => snackBarRef().map(_.show())
+    val undoAdd: ReactEvent => Callback =
+      e => close >> Callback(dom.window.alert("We removed Event from your calendar"))
 
-    def render = {
+    val closeRequested: String => Callback =
+      reason => close >> Callback.info(s"onRequestClose: $reason")
+
+    val toggleSnack: ReactEventH => Callback =
+      e => $.modState(!_)
+
+    def render(isOpen: Boolean) = {
       CodeExample(code, "MuiSnackBar")(
         MuiSnackbar(
-          message = "Event added to your calender",
-          action = "undo",
-          ref = snackBarRef.set,
-          onActionTouchTap = handleAction
+          autoHideDuration = 5000,
+          message          = "Event added to your calendar",
+          action           = "undo",
+          onActionTouchTap = undoAdd,
+          onRequestClose   = closeRequested,
+          open             = isOpen
         )(),
+      !isOpen ?
         MuiRaisedButton(
-          label = " Snack Bar Demo",
-          onTouchTap = buttonClick
+          label      = "Add event to calendar",
+          onTouchTap = toggleSnack
         )()
       )
     }
   }
 
-  val component = ReactComponentB[Unit]("MuiAppBarDemo")
+  implicit class BooleanNodeX[T](b: Boolean){
+    def ?(n: => ReactNode): ReactNode =
+      if (b) n else null
+  }
+
+  val component = ReactComponentB[Unit]("MuiSnackBar")
+    .initialState(false)
     .renderBackend[Backend]
-    .buildU
+    .build
+
+  // EXAMPLE:END
 
   def apply() = component()
 }

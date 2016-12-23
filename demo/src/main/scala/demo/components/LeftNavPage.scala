@@ -5,6 +5,7 @@ import demo.routes.LeftRoute
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.extra.router.RouterCtl
 import japgolly.scalajs.react.vdom.prefix_<^._
+
 import scala.scalajs.js
 import scalacss.Defaults._
 import scalacss.ScalaCssReact._
@@ -13,16 +14,20 @@ object LeftNavPage {
 
   object Style extends StyleSheet.Inline {
     import dsl._
+
     val container = style(
-    display.flex,
+      display.flex,
       minHeight(600.px),
-     paddingTop(64 px))
+      paddingTop(64.px)
+    )
 
     val nav = style(width(190.px))
 
-    val content = style(padding(30.px),
+    val content = style(
+      padding(30.px),
       borderLeft :=! "1px solid rgb(223, 220, 220)",
-     flex := "1")
+      flex := "1"
+    )
   }
 
   case class Backend($: BackendScope[Props, _]){

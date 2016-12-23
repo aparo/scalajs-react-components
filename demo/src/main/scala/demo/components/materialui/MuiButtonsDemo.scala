@@ -2,50 +2,19 @@ package demo
 package components
 package materialui
 
+import chandu0101.macros.tojs.GhPagesMacros
 import chandu0101.scalajs.react.components.materialui._
-import demo.components.materialui.svgicons.ActionGrade
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.prefix_<^._
+
 import scalacss.Defaults._
 import scalacss.ScalaCssReact._
-import scalacss.mutable.StyleSheet.Inline
 
 object MuiButtonsDemo {
 
-  val code =
-    """
-      | MuiAppBar(title = "Title")()
-      |
-    """.stripMargin
+  val code = GhPagesMacros.exampleSource
 
-  val flatButtonCode =
-    """
-      |MuiFlatButton(label = "Default")(),
-      |MuiFlatButton(label = "Primary",primary = true)(),
-      |MuiFlatButton(label = "Secondary", secondary = true)(),
-      |MuiFlatButton(label = "Disabled", disabled = true)()
-      |
-    """.stripMargin
-
-  val raisedButtonCode =
-    """
-      |MuiRaisedButton(label = "Default")(),
-      |MuiRaisedButton(label = "Primary",primary = true)(),
-      |MuiRaisedButton(label = "Secondary", secondary = true)(),
-      |MuiRaisedButton(label = "Disabled", disabled = true)()
-      |
-    """.stripMargin
-
-  val floatingButtonsCOde =
-    """
-      |MuiFloatingActionButton()(ActionGrade()),
-      |MuiFloatingActionButton(mini = true)(ActionGrade()),
-      |MuiFloatingActionButton(secondary = true)(ActionGrade()),
-      |MuiFloatingActionButton(secondary = true,mini = true)(ActionGrade())
-      |
-    """.stripMargin
-
-  object Style extends Inline {
+  object Style extends StyleSheet.Inline {
 
     import dsl._
 
@@ -57,45 +26,58 @@ object MuiButtonsDemo {
       alignItems.center)
   }
 
+  // EXAMPLE:START
+  import Mui.SvgIcons.ActionGrade
   val component = ReactComponentB[Unit]("MuiButtonsDemo")
-    .render(P => {
-    <.div(Style.container,
-      <.h3("Buttons"),
-      MuiTabs()(
-        MuiTab(label = "Flat Buttons")(
-          CodeExample(flatButtonCode)(
+    .render(P =>
+      CodeExample(code, "MuiButtons")(
+        <.div(Style.container,
+          <.h3("Buttons"),
+          MuiTabs()(
+            MuiTab(key = "tab1", label = "Flat Buttons")(
+              <.div(Style.content,
+                MuiFlatButton(key = "flat1", label = "Default",
+                  onBlur          = CallbackDebug.f1("onBlur"),
+                  onFocus         = CallbackDebug.f1("onFocus"),
+                  onKeyboardFocus = CallbackDebug.f1("onKeyboardFocus"),
+                  onKeyDown       = CallbackDebug.f1("onKeyDown"),
+                  onKeyUp         = CallbackDebug.f1("onKeyUp"),
+                  onTouchTap      = CallbackDebug.f1("onTouchTap"),
+                  onMouseLeave    = CallbackDebug.f1("onMouseLeave"),
+                  onTouchStart    = CallbackDebug.f1("onTouchStart"),
+                  onMouseEnter    = CallbackDebug.f1("onMouseEnter"))(),
+                MuiFlatButton(key = "flat2", label = "Primary", primary = true)(),
+                MuiFlatButton(key = "flat3", label = "Secondary", secondary = true)(),
+                MuiFlatButton(key = "flat4", label = "Disabled", disabled = true)()
+              )
+            ),
+            MuiTab(key = "tab2", label = "Raised Buttons")(
+              <.div(Style.content,
+                MuiRaisedButton(key = "raised1", label = "Default")(),
+                MuiRaisedButton(key = "raised2", label = "Primary", primary = true)(),
+                MuiRaisedButton(key = "raised3", label = "Secondary", secondary = true)(),
+                MuiRaisedButton(key = "raised4", label = "Disabled", disabled = true)()
+              )
+            ),
+          MuiTab(key = "tab3", label = "Floating Action Buttons")(
             <.div(Style.content,
-              MuiFlatButton(label = "Default")(),
-              MuiFlatButton(label = "Primary", primary = true)(),
-              MuiFlatButton(label = "Secondary", secondary = true)(),
-              MuiFlatButton(label = "Disabled", disabled = true)()
+              MuiFloatingActionButton(key = "floating1")(ActionGrade()()),
+              MuiFloatingActionButton(key = "floating2", mini = true)(ActionGrade()()),
+              MuiFloatingActionButton(key = "floating3", secondary = true)(ActionGrade()()),
+              MuiFloatingActionButton(key = "floating4", secondary = true, mini = true)(ActionGrade()())
             )
-          )
-        ),
-        MuiTab(label = "Raised Buttons")(
-          CodeExample(raisedButtonCode)(
+          ),
+          MuiTab(key = "tab4", label = "Icon Buttons")(
             <.div(Style.content,
-              MuiRaisedButton(label = "Default")(),
-              MuiRaisedButton(label = "Primary", primary = true)(),
-              MuiRaisedButton(label = "Secondary", secondary = true)(),
-              MuiRaisedButton(label = "Disabled", disabled = true)()
-            )
-          )
-        ),
-        MuiTab(label = "Floating Action Buttons")(
-          CodeExample(floatingButtonsCOde)(
-            <.div(Style.content,
-              MuiFloatingActionButton()(ActionGrade()),
-              MuiFloatingActionButton(mini = true)(ActionGrade()),
-              MuiFloatingActionButton(secondary = true)(ActionGrade()),
-              MuiFloatingActionButton(secondary = true,mini = true)(ActionGrade())
+              MuiIconButton(onTouchTap = CallbackDebug.f1("onTouchTap"))(ActionGrade()())
             )
           )
         )
       )
     )
-  }).buildU
+  ).build
+
+  // EXAMPLE:END
 
   def apply() = component()
-
 }

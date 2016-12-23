@@ -1,7 +1,8 @@
 package demo
 package components
 
-import chandu0101.scalajs.react.components.util.RCustomTags._
+import chandu0101.scalajs.react.components.RCustomStyles
+import chandu0101.scalajs.react.components.RCustomStyles._
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.prefix_<^._
 
@@ -12,8 +13,8 @@ object AppHeader {
     val headerStyle: Seq[TagMod] = Seq(
       ^.background := "#F2706D",
       ^.fontSize := "1.5em",
-      ^.padding := "0",
-      ^.margin := "0",
+      ^.padding := "0px",
+      ^.margin := "0px",
       ^.position := "fixed",
       ^.width := "100%",
       ^.zIndex := "5"
@@ -52,29 +53,33 @@ object AppHeader {
 
   class Backend(t: BackendScope[_, State]) {
 
-    def onMouseEnter_(menu: String) = t.modState(_.copy(menuHover = menu))
+    def onMouseEnter(menu: String) = t.modState(_.copy(menuHover = menu))
 
-    val onMouseLeave_ = t.modState(_.copy(menuHover = ""))
+    val onMouseLeave = t.modState(_.copy(menuHover = ""))
 
     def render(S: State) = {
-      val docs: String = "Docs"
       val github: String = "Github"
       <.header(Style.headerStyle)(
         <.nav(Style.menuNav)(
           <.a(Style.logo, ^.href := "#")("S J R C"),
           <.div(^.marginLeft := "auto")(
-            <.a(^.target :="_blank" ,(S.menuHover == github) ?= Style.menuItemHover,Style.menuItem, ^.href := "https://github.com/chandu0101/scalajs-react-components", onMouseEnter --> onMouseEnter_(github), onMouseLeave --> onMouseLeave_)(github)
+            <.a(
+              ^.target :="_blank" ,
+              (S.menuHover == github) ?= Style.menuItemHover,
+              Style.menuItem,
+              ^.href := "https://github.com/chandu0101/scalajs-react-components",
+              ^.onMouseEnter --> onMouseEnter(github),
+              ^.onMouseLeave --> onMouseLeave)(github)
           )
         )
       )
     }
-
   }
 
   val component = ReactComponentB[Unit]("AppHeader")
     .initialState(State())
     .renderBackend[Backend]
-    .buildU
+    .build
 
   def apply() = component()
 

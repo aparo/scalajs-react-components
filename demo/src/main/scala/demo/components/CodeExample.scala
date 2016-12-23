@@ -3,6 +3,7 @@ package components
 
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.prefix_<^._
+
 import scala.scalajs.js
 
 object CodeExample {
@@ -31,7 +32,7 @@ object CodeExample {
             C
           ),
           <.pre(Style.contentCode, ^.key := "code")(
-            CodeHighLighter(P.code)
+            CodeHighlight(P.code)
           )
         )
       )
@@ -44,6 +45,10 @@ object CodeExample {
 
   case class Props(code: String,title: String)
 
-  def apply(code: String, title: String = "", ref: js.UndefOr[String] = "", key: js.Any = {})(children: ReactNode*) = component.set(key, ref)(Props(code,title), children)
-
+  def apply(code:     String,
+            title:    String,
+            ref:      js.UndefOr[String] = "",
+            key:      js.Any = {})
+           (children: ReactNode*) =
+    component.set(key, ref)(Props(code,title), children :_*)
 }

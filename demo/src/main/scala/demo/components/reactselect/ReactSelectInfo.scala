@@ -4,6 +4,7 @@ package reactselect
 
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.prefix_<^._
+
 import scalacss.Defaults._
 
 object ReactSelectInfo {
@@ -19,7 +20,7 @@ object ReactSelectInfo {
 
   val component = ReactComponentB[Unit]("ReactSelectInfo")
     .render(P => {
-    InfoTemplate(componentFilePath = "optionselectors/ReactSelect.scala")(
+    InfoTemplate(componentFilePath = "reactselect/Select.scala")(
       <.div(
         <.h3("React Select "),
         <.p("scalajs-react wrapper for ",
@@ -27,7 +28,7 @@ object ReactSelectInfo {
         ),
         <.div(
           <.h4("Supported Version :"),
-          <.span("0.5.1")
+          <.span("1.0.0-beta")
         ),
         <.div(
           <.h4("How To Use :"),
@@ -37,7 +38,7 @@ object ReactSelectInfo {
       )
     )
 
-  }).buildU
+  }).build
 
   def apply() = component()
 }
