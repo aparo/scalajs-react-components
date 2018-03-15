@@ -1,21 +1,23 @@
 package chandu0101.macros.tojs
 
 import japgolly.scalajs.react.CallbackTo
+import japgolly.scalajs.react.vdom.{TagOf, VdomElement, VdomNode}
+
 import scala.collection.{GenMap, GenTraversableOnce}
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox
 import scala.scalajs.js
 
 /**
- * modified version of https://github.com/wav/scala-macros/blob/master/src/main/scala/wav/common/scalajs/macros/Macros.scala
- * via https://github.com/chandu0101/macros/blob/master/src/main/scala/chandu0101/macros/tojs/JSMacro.scala
- */
+  * modified version of https://github.com/wav/scala-macros/blob/master/src/main/scala/wav/common/scalajs/macros/Macros.scala
+  * via https://github.com/chandu0101/macros/blob/master/src/main/scala/chandu0101/macros/tojs/JSMacro.scala
+  */
 object JSMacro {
   type TOJS = {
     val toJS: js.Object
   }
 
-  implicit def apply[T]: T => js.Object = macro applyImpl[T]
+  def apply[T]: T => js.Object = macro applyImpl[T]
 
   def applyImpl[T: c.WeakTypeTag](c: blackbox.Context): c.Tree = {
     import c.universe._
@@ -60,6 +62,14 @@ object JSMacro {
       else if (rt <:< typeOf[Function3[_, _, _, CallbackTo[_]]])
         q"""((t0: ${rt.typeArgs(0)}, t1: ${rt.typeArgs(1)}, t2: ${rt.typeArgs(2)}) => $target(t0, t1, t2).runNow())"""
 
+      /* other scalajs-react things we need to rewrite */
+      else if (rt <:< typeOf[VdomElement])
+        q"""$target.rawElement"""
+      else if (rt <:< typeOf[VdomNode])
+        q"""$target.rawNode"""
+      else if (rt <:< typeOf[TagOf[_]])
+        q"""$target.render"""
+
       /* Other values. Keep AnyVal below at least CallbackTo */
       else if (rt <:< typeOf[AnyVal] && isNotPrimitiveAnyVal(rt))
         q"""$target.value"""
@@ -69,32 +79,35 @@ object JSMacro {
         q"""$target"""
     }
 
-
     val tpe    = c.weakTypeOf[T]
     val target = c.freshName[TermName](TermName("t"))
     val props  = c.freshName[TermName](TermName("p"))
 
-    val fieldSymbols: List[Symbol] = tpe.decls.collectFirst {
-      case m: MethodSymbol if m.isPrimaryConstructor => m
-    }.get.paramLists.head
+    val fieldSymbols: List[Symbol] = tpe.decls
+      .collectFirst {
+        case m: MethodSymbol if m.isPrimaryConstructor => m
+      }
+      .get
+      .paramLists
+      .head
 
-    val fieldUpdates = fieldSymbols.map{
-      f =>
-        val name      = f.asTerm.name
-        val decoded   = name.decodedName.toString
+    val fieldUpdates = fieldSymbols.map { f =>
+      val name    = f.asTerm.name
+      val decoded = name.decodedName.toString
 
-        if (isOptional(f.typeSignature)){
-          val valueTree = getJSValueTree(q"v", f.typeSignature.typeArgs.head)
-          q"""$target.$name.foreach(v => $props.updateDynamic($decoded)($valueTree))"""
-        } else {
-          val valueTree = getJSValueTree(q"$target.$name", f.typeSignature)
-          q"""$props.updateDynamic($decoded)($valueTree)"""
-        }
+      val res = if (isOptional(f.typeSignature)) {
+        val valueTree = getJSValueTree(q"v", f.typeSignature.typeArgs.head)
+        q"""$target.$name.foreach(v => $props.updateDynamic($decoded)($valueTree))"""
+      } else {
+        val valueTree = getJSValueTree(q"$target.$name", f.typeSignature)
+        q"""$props.updateDynamic($decoded)($valueTree)"""
+      }
+      res
     }
 
     q""" ($target: $tpe) => {
-      import scala.language.reflectiveCalls
-      import scalajs.js.JSConverters._
+//      import scala.language.reflectiveCalls
+//      import scalajs.js.JSConverters._
       val $props = scala.scalajs.js.Dynamic.literal()
       ..$fieldUpdates
       $props

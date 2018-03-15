@@ -3,7 +3,7 @@ package demo.components
 import chandu0101.macros.tojs.GhPagesMacros
 import chandu0101.scalajs.react.components.{RElementPosition, ReactDraggable}
 import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.prefix_<^._
+import japgolly.scalajs.react.vdom.html_<^._
 import org.scalajs.dom.raw.Event
 
 object ReactDraggableDemo {
@@ -12,15 +12,17 @@ object ReactDraggableDemo {
 
   // EXAMPLE:START
 
-  case class Backend($: BackendScope[Unit, Unit]) {
+  case class Backend($ : BackendScope[Unit, Unit]) {
 
     def render =
-     <.div(^.cls := "react-draggable-demo",
-       <.h2(^.cls := "mui-font-style-headline", "Demo"),
+      <.div(
+        ^.cls := "react-draggable-demo",
+        <.h2(^.cls := "mui-font-style-headline", "Demo"),
         CodeExample(code, "ReactDraggable")(
           ReactDraggable(
             zIndex = 100,
-            onStop = (e: Event, pos: RElementPosition) => Callback.info(s"stopped at $pos"))(
+            onStop = (e: Event, pos: RElementPosition) => Callback.info(s"stopped at $pos")
+          )(
             <.div(
               <.h2("Drag me"),
               ^.backgroundColor := "#F2706D",
@@ -32,7 +34,8 @@ object ReactDraggableDemo {
       )
   }
 
-  val component = ReactComponentB[Unit]("ReactDraggableDemo")
+  val component = ScalaComponent
+    .builder[Unit]("ReactDraggableDemo")
     .renderBackend[Backend]
     .build
 

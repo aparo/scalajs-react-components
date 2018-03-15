@@ -2,7 +2,7 @@ package chandu0101.scalajs.react.components
 
 import chandu0101.scalajs.react.components.fascades._
 import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.prefix_<^._
+import japgolly.scalajs.react.vdom.html_<^._
 import org.scalajs.dom.{Event, document, html}
 
 import scala.scalajs.js
@@ -34,10 +34,14 @@ object GoogleMap {
         } else initialize(P)
 
     def initialize(P: Props): Callback =
-      t.modState(
-        _.copy(mapObjects = Some((new GMap(t.getDOMNode(), MapOptions(P.center, P.zoom).toGMapOptions), new GInfoWindow))),
-        cb = updateMap(P)
-      )
+      t.root.getDOMNode
+        .flatMap(
+          node =>
+            t.modState(
+              _.copy(mapObjects = Some(
+                (new GMap(node, MapOptions(P.center, P.zoom).toGMapOptions), new GInfoWindow))),
+              callback = updateMap(P)
+          ))
 
     def updateMap(P: Props): Callback =
       t.modState(
@@ -48,14 +52,16 @@ object GoogleMap {
               S.markers.foreach(_.setMap(null))
               val newMarkers = P.markers.map(prepareMarker(infoWindow, gmap)).toList
               S.copy(markers = newMarkers)
-          }
+        }
       )
 
     private def prepareMarker(infowindow: GInfoWindow, map: GMap)(m: Marker) = {
       val marker = new GMarker(m.toGMarker(map))
       if (!m.content.isEmpty) {
         new GAddListener(
-          marker, "click", (e: Event) => {
+          marker,
+          "click",
+          (e: Event) => {
             infowindow.setContent(m.content)
             infowindow.open(map, marker)
           }
@@ -67,34 +73,42 @@ object GoogleMap {
     def render(P: Props) = <.div(^.height := P.height, ^.width := P.width)
   }
 
-  case class Props(width: String, height: String, center: LatLng, zoom: Int, markers: Seq[Marker], url: String)
+  case class Props(width: String,
+                   height: String,
+                   center: LatLng,
+                   zoom: Int,
+                   markers: Seq[Marker],
+                   url: String)
 
-  val component = ReactComponentB[Props]("googleMap")
+  val component = ScalaComponent
+    .builder[Props]("googleMap")
     .initialState(State(None, Nil))
     .renderBackend[Backend]
-    .componentWillReceiveProps{
-      case ComponentWillReceiveProps(_$, nextProps) => _$.backend.updateMap(nextProps)
+    .componentWillReceiveProps { wrp =>
+      wrp.backend.updateMap(wrp.nextProps)
     }
     .componentDidMount($ => $.backend.loadScript($.props))
     .componentWillUnmount($ => Callback($.state.markers.foreach(new GClearInstanceListeners(_))))
     .build
 
   /**
-   *
-   * @param width width of map
-   * @param height height of map
-   * @param center center position(lat,lng) for map
-   * @param zoom zoom value
-   * @param markers markers for the map
-   * @param url url to get googlemap api, by default it uses https://maps.googleapis.com/maps/api/js you can override if you want.
-   * @return
-   */
-  def apply(width: String = "500px",
-            height: String = "500px",
-            center: LatLng,
-            zoom: Int = 4,
-            markers: List[Marker] = Nil,
-            url: String = "https://maps.googleapis.com/maps/api/js") =
+    *
+    * @param width width of map
+    * @param height height of map
+    * @param center center position(lat,lng) for map
+    * @param zoom zoom value
+    * @param markers markers for the map
+    * @param url url to get googlemap api, by default it uses https://maps.googleapis.com/maps/api/js you can override if you want.
+    * @return
+    */
+  def apply(
+      width: String = "500px",
+      height: String = "500px",
+      center: LatLng,
+      zoom: Int = 4,
+      markers: List[Marker] = Nil,
+      url: String = "https://maps.googleapis.com/maps/api/js"
+  ) =
     component(Props(width, height, center, zoom, markers, url))
 
 }

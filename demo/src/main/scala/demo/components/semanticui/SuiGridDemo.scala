@@ -4,7 +4,7 @@ import chandu0101.macros.tojs.GhPagesMacros
 import chandu0101.scalajs.react.components.semanticui._
 import demo.components.CodeExample
 import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.prefix_<^._
+import japgolly.scalajs.react.vdom.html_<^._
 
 object SuiGridDemo {
 
@@ -12,19 +12,18 @@ object SuiGridDemo {
 
   // EXAMPLE:START
 
+  case class Backend($ : BackendScope[Unit, Unit]) {
 
-  case class Backend($: BackendScope[Unit, Unit]) {
-
-    val columns = (1 to 16).map(i => SuiGridColumn(key = i.toString)(SuiImage(src = "http://semantic-ui.com/images/wireframe/image.png")()))
+    val columns = (1 to 16).map(
+      i =>
+        (SuiGridColumn(key = i.toString)(
+          SuiImage(src = "http://semantic-ui.com/images/wireframe/image.png")()).vdomElement))
     def render() =
-      <.div(
-        CodeExample(code, "SuiGrid")(
-         SuiGrid()(columns)
-        )
-      )
+      <.div(CodeExample(code, "SuiGrid")(SuiGrid()(columns: _*)))
   }
 
-  val component = ReactComponentB[Unit]("SuiGridDemo")
+  val component = ScalaComponent
+    .builder[Unit]("SuiGridDemo")
     .renderBackend[Backend]
     .build
 
