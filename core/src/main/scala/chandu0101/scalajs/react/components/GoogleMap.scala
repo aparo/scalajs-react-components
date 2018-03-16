@@ -35,13 +35,20 @@ object GoogleMap {
 
     def initialize(P: Props): Callback =
       t.root.getDOMNode
-        .flatMap(
-          node =>
+        .flatMap{
+          case Right(node) =>
             t.modState(
               _.copy(mapObjects = Some(
                 (new GMap(node, MapOptions(P.center, P.zoom).toGMapOptions), new GInfoWindow))),
               callback = updateMap(P)
-          ))
+          )
+          case Left(node) =>
+            t.modState(
+              _.copy(mapObjects = Some(
+                (new GMap(node, MapOptions(P.center, P.zoom).toGMapOptions), new GInfoWindow))),
+              callback = updateMap(P)
+            )
+        }
 
     def updateMap(P: Props): Callback =
       t.modState(

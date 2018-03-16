@@ -124,7 +124,9 @@ object ReactDraggable {
   class Backend(t: BackendScope[Props, State]) {
 
     def pos(S: State) =
-      t.root.getDOMNode.map(node => RElementPosition(node, top = S.clientY, left = S.clientX))
+      t.root.getDOMNode.map{
+        node => RElementPosition(node.asElement, top = S.clientY, left = S.clientX)
+      }
 
     def handleDragStart(props: Props)(e: Event): Callback = {
       val moveEventType = DomUtil.dragEventFor(e, "move")

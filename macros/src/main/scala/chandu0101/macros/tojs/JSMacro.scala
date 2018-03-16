@@ -66,7 +66,7 @@ object JSMacro {
       else if (rt <:< typeOf[VdomElement])
         q"""$target.rawElement"""
       else if (rt <:< typeOf[VdomNode])
-        q"""$target.rawNode"""
+        q"""$target.rawNode.asInstanceOf[_root_.scala.scalajs.js.Any]"""
       else if (rt <:< typeOf[TagOf[_]])
         q"""$target.render"""
 
@@ -105,12 +105,14 @@ object JSMacro {
       res
     }
 
-    q""" ($target: $tpe) => {
+    val res=q""" ($target: $tpe) => {
 //      import scala.language.reflectiveCalls
 //      import scalajs.js.JSConverters._
       val $props = scala.scalajs.js.Dynamic.literal()
       ..$fieldUpdates
       $props
     }"""
+//    println(res)
+    res
   }
 }

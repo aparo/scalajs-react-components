@@ -48,7 +48,7 @@ implicit def ev2${p.name}(${p.name.toLowerCase}: ${p.name} | js.Array[${p.name}]
           |
           |${indent(1)}def apply() = {
           |${indent(2)}${hack(comp)}
-          |${indent(2)}val props = JSMacro[${comp.nameDef(prefix)}](this)
+          |${indent(2)}val props: js.Object = JSMacro[${comp.nameDef(prefix)}](this)
           |${indent(2)}val f = JsComponent[js.Object, Children.None, Null]($prefix.${comp.name.value})
           |${indent(2)}f(props)
           |${indent(1)}}
@@ -61,7 +61,7 @@ implicit def ev2${p.name}(${p.name.toLowerCase}: ${p.name} | js.Array[${p.name}]
            |${outChildrenComment(childrenProp.commentOpt)}
            |${indent(1)}def apply(children: ${childrenProp.baseType.name}*) = {
            |${indent(2)}${hack(comp)}
-           |${indent(2)}val props = JSMacro[${comp.nameDef(prefix)}](this)
+           |${indent(2)}val props: js.Object = JSMacro[${comp.nameDef(prefix)}](this)
            |${indent(2)}val f = JsComponent[js.Object, Children.Varargs, Null]($prefix.${comp.name.value})
            |${indent(2)}f(props)(children: _*)
            |${indent(1)}}
@@ -74,7 +74,7 @@ implicit def ev2${p.name}(${p.name.toLowerCase}: ${p.name} | js.Array[${p.name}]
            |${indent(1)}def apply(child: ${childrenProp.typeName} = js.undefined) = {
            |${indent(2)}${if (!childrenProp.isRequired) "import js.UndefOr._"}
            |${indent(2)}${hack(comp)}
-           |${indent(2)}val props = JSMacro[${comp.nameDef(prefix)}](this)
+           |${indent(2)}val props: js.Object = JSMacro[${comp.nameDef(prefix)}](this)
            |${indent(2)}val f = JsComponent[js.Object, Children.Varargs, Null]($prefix.${comp.name.value})
            |${indent(2)}${if (childrenProp.isRequired) "f(props)(child)"
            else "child.fold(f(props)())(ch => f(props)(ch))"}
