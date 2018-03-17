@@ -5,6 +5,7 @@ import demo.routes.{LeftRoute, ReactSplitPaneRouteModule}
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.extra.router.RouterCtl
 import japgolly.scalajs.react.vdom.html_<^._
+import scala.language.existentials
 
 object ReactSplitPanePage {
   case class Backend($ : BackendScope[_, _]) {

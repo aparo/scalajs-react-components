@@ -7,6 +7,7 @@ import chandu0101.scalajs.react.components.ReactTable
 import demo.util.{Person, SampleData}
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
+import scala.language.existentials
 
 object ReactTableCustomColumnSize {
   import ReactTable._
