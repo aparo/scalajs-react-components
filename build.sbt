@@ -1,6 +1,9 @@
 // *****************************************************************************
 // Projects
 // *****************************************************************************
+
+val webpackVersion="2.6.1"
+
 lazy val macros =
   project
     .in(file("macros"))
@@ -23,8 +26,8 @@ lazy val gen =
     .settings(
       organization := "com.olvind",
       name := "generator",
-      version in webpack := "2.6.1",
-//      version in installWebpackDevServer := "2.7.1",
+      version in webpack := webpackVersion,
+      version in startWebpackDevServer := "2.11.1",
       libraryDependencies ++= Seq(
         "com.lihaoyi"   %% "ammonite-ops" % "1.0.1",
         "org.scalatest" %% "scalatest"    % "3.0.5" % Test
@@ -117,8 +120,8 @@ lazy val demo =
     .settings(commonSettings, preventPublication, npmSettings, npmDevSettings)
     .settings(
       name := "scalajs-react-components-demo",
-      version in webpack := "2.6.1",
-//      version in installWebpackDevServer := "2.7.1",
+      version in webpack := webpackVersion,
+      version in startWebpackDevServer := "2.11.1",
       scalaJSUseMainModuleInitializer := true,
       scalaJSUseMainModuleInitializer.in(Test) := false,
       artifactPath.in(Compile, fastOptJS) := ((crossTarget in (Compile, fastOptJS)).value /
@@ -255,7 +258,7 @@ lazy val npmDevSettings = {
     "style-loader"               -> "0.19.0",
     "url-loader"                 -> "0.6.2",
     "expose-loader"              -> "0.7.4",
-    "webpack"                    -> "3.10.0",
+    "webpack"                    -> webpackVersion,
     "webpack-dev-server"         -> "2.11.1",
     "@types/webpack"             -> "3.8.3"
   )
