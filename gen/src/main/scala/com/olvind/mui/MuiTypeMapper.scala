@@ -92,7 +92,7 @@ object MuiTypeMapper extends TypeMapper {
       case (_, "valueLink", "Mui.object")                         => Normal("js.Any")
 
       /* mui general */
-      case (_, _, "Mui.string") if is("color")            => Normal("MuiColor")
+      case (_, _, "Mui.string") if is("color")            => Normal("MuiColors | MuiColor | String")
       case (_, _, "Mui.object") if is("style")            => Normal("CssProperties")
       case (_, _, "Mui.object") if is("muiTheme")         => Normal("MuiTheme")
       case (_, _, "Mui.object")                           => Normal("js.Object")
@@ -100,9 +100,9 @@ object MuiTypeMapper extends TypeMapper {
       case (_, "label", "validateLabel")                  => Normal("String")
       case (_, "zDepth", _)                               => Normal("ZDepth")
       case (_, _, "Mui.origin")                           => Normal("Origin")
-      case (_, _, "_propTypes4.default.origin")           => Normal("Origin") //TODO???
-      case (_, _, "_propTypes4.default.cornersAndCenter") => Normal("CornersAndCenter") //TODO???
-      case (_, _, "_propTypes4.default.stringOrNumber")   => Normal("String | Double") //TODO???
+      case (_, _, "_propTypes4.default.origin")           => Normal("Origin")
+      case (_, _, "_propTypes4.default.cornersAndCenter") => Normal("CornersAndCenter")
+      case (_, _, "_propTypes4.default.stringOrNumber")   => Normal("String | Double")
       case (_, _, "Mui.cornersAndCenter")                 => Normal("CornersAndCenter")
       case (_, _, "Mui.corners")                          => Normal("Corners")
       case (_, _, "Mui.stringOrNumber")                   => Normal("String | Double")
