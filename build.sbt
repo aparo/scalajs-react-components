@@ -1,6 +1,9 @@
 // *****************************************************************************
 // Projects
 // *****************************************************************************
+lazy val webpackVersion = "4.1.1"
+lazy val webpackDevVersion = "3.1.1"
+
 lazy val macros =
   project
     .in(file("macros"))
@@ -23,7 +26,8 @@ lazy val gen =
     .settings(
       organization := "com.olvind",
       name := "generator",
-      version in webpack := "2.6.1",
+      version in webpack := webpackVersion,
+      version in startWebpackDevServer := webpackDevVersion,
       libraryDependencies ++= Seq(
 "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.0",
 "com.lihaoyi"   %% "ammonite-ops" % "1.0.1",
@@ -32,7 +36,6 @@ lazy val gen =
     )
 
 lazy val generateMui = TaskKey[Seq[File]]("generateMui")
-lazy val generateEui = TaskKey[Seq[File]]("generateEui")
 lazy val generateSui = TaskKey[Seq[File]]("generateSui")
 
 lazy val core =
@@ -42,22 +45,6 @@ lazy val core =
     .enablePlugins(ScalaJSPlugin)
     .settings(commonSettings, publicationSettings)
     .settings(
-      generateEui := {
-        val genDir = sourceManaged.value
-        genDir.mkdirs()
-        val res = runner.value.run(
-          "com.olvind.eui.EuiRunner",
-          (fullClasspath in (gen, Runtime)).value.files,
-          List(
-            (npmUpdate in (gen, Compile)).value / "node_modules" / "elemental",
-            sourceManaged.value / "main"
-          ) map (_.absolutePath),
-          streams.value.log
-        )
-
-        val pathFinder: PathFinder = sourceManaged.value ** "*.scala"
-        pathFinder.get.filter(_.getAbsolutePath.contains("elemental"))
-      },
       generateMui := {
         val genDir = sourceManaged.value
         genDir.mkdirs()
@@ -91,7 +78,6 @@ lazy val core =
     )
     .settings(
       sourceGenerators in Compile += generateMui,
-      sourceGenerators in Compile += generateEui,
       sourceGenerators in Compile += generateSui,
       libraryDependencies ++= Seq(
         "com.github.japgolly.scalajs-react" %%% "core"        % "1.2.0" withSources (),
@@ -117,8 +103,8 @@ lazy val demo =
     .settings(commonSettings, preventPublication, npmSettings, npmDevSettings)
     .settings(
       name := "scalajs-react-components-demo",
-      version in webpack := "2.6.1",
-//      version in installWebpackDevServer := "2.7.1",
+      version in webpack := webpackVersion,
+      version in startWebpackDevServer := webpackDevVersion,
       scalaJSUseMainModuleInitializer := true,
       scalaJSUseMainModuleInitializer.in(Test) := false,
       artifactPath.in(Compile, fastOptJS) := ((crossTarget in (Compile, fastOptJS)).value /
@@ -202,14 +188,12 @@ lazy val publicationSettings = Seq(
 )
 
 lazy val SuiVersion   = "0.79.1"
-lazy val EuiVersion   = "0.6.1"
 lazy val MuiVersion   = "0.20.0"
 lazy val reactVersion = "16.0.0"
 
 lazy val npmGenSettings = Seq(
   useYarn := true,
   npmDependencies.in(Compile) := Seq(
-    "elemental"         -> EuiVersion,
     "material-ui"       -> MuiVersion,
     "semantic-ui-react" -> SuiVersion
   )
@@ -218,7 +202,6 @@ lazy val npmGenSettings = Seq(
 lazy val npmSettings = Seq(
   useYarn := true,
   npmDependencies.in(Compile) := Seq(
-    "elemental"                         -> EuiVersion,
     "highlight.js"                      -> "9.9.0",
     "material-ui"                       -> MuiVersion,
     "react"                             -> reactVersion,
@@ -228,9 +211,8 @@ lazy val npmSettings = Seq(
     "react-addons-pure-render-mixin"    -> "15.6.2",
     "react-addons-transition-group"     -> "15.6.2",
     "react-addons-update"               -> "15.6.2",
-    "react-geomicons"                   -> "2.1.0",
-    "react-infinite"                    -> "0.12.1",
-    "react-select"                      -> "1.2.1",
+    "react-infinite"                    -> "0.13.0",
+    "react-select"                      -> "2.0.0-beta.2",
     "react-slick"                       -> "0.20.0",
     "react-spinner"                     -> "0.2.7",
     "react-split-pane"                  -> "0.1.77",
@@ -244,8 +226,9 @@ lazy val npmSettings = Seq(
 
 lazy val npmDevSettings = {
   val deps = Seq(
-    "css-loader"                 -> "0.28.10",
+    "css-loader"                 -> "0.28.11",
     "file-loader"                -> "1.1.11",
+    "extract-text-webpack-plugin" -> "4.0.0-beta.0",
     "gulp-decompress"            -> "2.0.2",
     "image-webpack-loader"       -> "4.2.0",
     "imagemin"                   -> "5.3.1",
@@ -257,8 +240,8 @@ lazy val npmDevSettings = {
     "style-loader"               -> "0.20.3",
     "url-loader"                 -> "1.0.1",
     "expose-loader"              -> "0.7.5",
-    "webpack"                    -> "4.1.1",
-    "webpack-dev-server"         -> "3.1.1",
+    "webpack"                    -> webpackVersion,
+    "webpack-dev-server"         -> webpackDevVersion,
     "@types/webpack"             -> "4.1.0"
   )
 

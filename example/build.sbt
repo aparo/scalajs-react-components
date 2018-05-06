@@ -69,7 +69,7 @@ lazy val bundlerSettings =
       "react-addons-pure-render-mixin"    -> "15.5.2",
       "react-addons-transition-group"     -> "15.0.0",
       "react-addons-update"               -> "15.5.2",
-      "react-geomicons"                   -> "2.1.0",
+//      "react-geomicons"                   -> "2.1.0",
       "react-infinite"                    -> "0.11.0",
       "react-select"                      -> "1.0.0-rc.5",
       "react-slick"                       -> "0.14.11",

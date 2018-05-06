@@ -15,10 +15,8 @@ Adding types to javascript is a lot of guesswork, and we're certain to have gott
 These components require you to provide javascript yourself.
 
 - Material-ui 0.18.1
-- Elemental-ui 0.6.1
 - Semantic-ui 0.68.5
 - Google maps (downloads js directly from google)
-- React GeomIcon (react-geomicons: 2.1.10)
 - React Infinite (react-infinite, 0.11.0)
 - Spinner (react-spinner, 0.2.7)
 - React Select (react-select: 1.0.0-rc.5)

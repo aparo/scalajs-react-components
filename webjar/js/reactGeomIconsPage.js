@@ -1,4 +1,4 @@
-var ReactGeomIcon = require('react-geomicons');
+//var ReactGeomIcon = require('react-geomicons');
 
 
-window.ReactGeomIcon = ReactGeomIcon;
+//window.ReactGeomIcon = ReactGeomIcon;

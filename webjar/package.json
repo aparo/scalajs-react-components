@@ -37,7 +37,6 @@
     "material-ui": "v0.13.0",
     "react": "^0.14.0",
     "react-dom": "^0.14.0-0",
-    "react-geomicons": "^2.0.4",
     "react-infinite": "^0.5.7",
     "react-select": "^0.8.1",
     "react-spinner": "^0.2.2",

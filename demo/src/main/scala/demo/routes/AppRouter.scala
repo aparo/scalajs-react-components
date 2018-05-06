@@ -13,12 +13,10 @@ object AppRouter {
 
   case object Home extends Page
 
-  case class EuiPages(p: LeftRoute)            extends Page
   case class GoogleMapPages(p: LeftRoute)      extends Page
   case class MuiPages(p: LeftRoute)            extends Page
   case class SuiPages(p: LeftRoute)            extends Page
   case class ReactDraggablePages(p: LeftRoute) extends Page
-  case class ReactGeomIconPages(p: LeftRoute)  extends Page
   case class ReactInfinitePages(p: LeftRoute)  extends Page
   case class ReactListViewPages(p: LeftRoute)  extends Page
   case class ReactPopoverPages(p: LeftRoute)   extends Page
@@ -61,11 +59,6 @@ object AppRouter {
         .prefixPath_/("#reacttagsinput")
         .pmap[Page](ReactTagsInputPages) { case ReactTagsInputPages(p) => p }
 
-    val reactGeomIconRoutes: Rule =
-      ReactGeomIcontRouteModule.routes
-        .prefixPath_/("#reactgeomicon")
-        .pmap[Page](ReactGeomIconPages) { case ReactGeomIconPages(p) => p }
-
     val reactInfiniteRoutes: Rule =
       ReactInfiniteRouteModule.routes
         .prefixPath_/("#reactinite")
@@ -86,11 +79,6 @@ object AppRouter {
         .prefixPath_/("#materialui")
         .pmap[Page](MuiPages) { case MuiPages(p) => p }
 
-    val euiRoutes: Rule =
-      EuiRouteModule.routes
-        .prefixPath_/("#elementalui")
-        .pmap[Page](EuiPages) { case EuiPages(p) => p }
-
     val suiRoutes: Rule =
       SuiRouteModule.routes
         .prefixPath_/("#semanticui")
@@ -104,12 +92,10 @@ object AppRouter {
     (trimSlashes
       | staticRoute(root, Home) ~> renderR(ctrl => HomePage(ctrl))
       | staticRoute("#scalacss", ScalaCSSDoc) ~> render(ScalaCSSTutorial())
-      | euiRoutes
       | suiRoutes
       | googleMapRoutes
       | muiRoutes
       | reactDraggableRoutes
-      | reactGeomIconRoutes
       | reactInfiniteRoutes
       | reactListViewRoutes
       | reactPopoverRoutes
@@ -140,12 +126,6 @@ object AppRouter {
       imagePath = Images.materialuiImage,
       route = MuiPages(MuiRouteModule.Info),
       tags = Stream("materialui", "material", "framework")
-    ),
-    HomePage.ComponentInfo(
-      name = "Elemental UI",
-      imagePath = Images.elementaluiImage,
-      route = EuiPages(EuiRouteModule.Info),
-      tags = Stream("elementalui", "elemental", "framework")
     ),
     HomePage.ComponentInfo(
       name = "Semantic UI",
@@ -194,12 +174,6 @@ object AppRouter {
       imagePath = Images.reactTagsInputImage,
       route = ReactTagsInputPages(ReactTagsInputRouteModule.Info),
       tags = Stream("tags", "input")
-    ),
-    HomePage.ComponentInfo(
-      name = "React GeomIcons",
-      imagePath = Images.reactGeomIconImage,
-      route = ReactGeomIconPages(ReactGeomIcontRouteModule.Info),
-      tags = Stream("icons", "svg")
     ),
     HomePage.ComponentInfo(
       name = "React Infinite",
