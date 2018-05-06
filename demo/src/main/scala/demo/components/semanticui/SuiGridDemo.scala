@@ -6,6 +6,8 @@ import demo.components.CodeExample
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
+import scala.scalajs.js
+
 object SuiGridDemo {
 
   val code = GhPagesMacros.exampleSource
@@ -17,7 +19,7 @@ object SuiGridDemo {
     val columns = (1 to 16).map(
       i =>
         (SuiGridColumn(key = i.toString)(
-          SuiImage(src = "http://semantic-ui.com/images/wireframe/image.png")()).vdomElement))
+          SuiImage(content = "http://semantic-ui.com/images/wireframe/image.png".asInstanceOf[js.Any])()).vdomElement))
     def render() =
       <.div(CodeExample(code, "SuiGrid")(SuiGrid()(columns: _*)))
   }

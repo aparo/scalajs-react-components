@@ -34,19 +34,19 @@ object ReactPopoverDemo {
           <.div(Style.popoverExample)(
             <.div(^.padding := "20px")(
               topRef.component(Props("Top Title", "top"))("I am Top Pop over"),
-              LocalDemoButton(name = "Top Button", onButtonClick = toggleCB(topRef.value))
+              LocalDemoButton(name = "Top Button", onButtonClick = toggleCB(topRef.get.asCallback.runNow().get))
             ),
             <.div(^.padding := "20px")(
               leftRef.component(Props("Left Title", "left"))("I am left Popover"),
-              LocalDemoButton(name = "Left Button", onButtonClick = toggleCB(leftRef.value))
+              LocalDemoButton(name = "Left Button", onButtonClick = toggleCB(leftRef.get.asCallback.runNow().get))
             ),
             <.div(^.padding := "20px")(
               rightRef.component(Props("Right Title", "right"))("I am Right Popover"),
-              LocalDemoButton(name = "Right Button", onButtonClick = toggleCB(rightRef.value))
+              LocalDemoButton(name = "Right Button", onButtonClick = toggleCB(rightRef.get.asCallback.runNow().get))
             ),
             <.div(^.padding := "20px")(
               bottomRef.component(Props("Bottom Title", "bottom"))("I am bottom Popover"),
-              LocalDemoButton(name = "Bottom Button", onButtonClick = toggleCB(bottomRef.value))
+              LocalDemoButton(name = "Bottom Button", onButtonClick = toggleCB(bottomRef.get.asCallback.runNow().get))
             )
           )
         )

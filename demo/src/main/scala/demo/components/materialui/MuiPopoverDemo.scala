@@ -36,8 +36,8 @@ object MuiPopoverDemo {
   case class State(open: Boolean, target: Origin, anchor: Origin)
 
   private case class Backend($ : BackendScope[Unit, State]) {
-    var ref: js.UndefOr[Div] = js.undefined
-
+    //var ref: js.UndefOr[Div] = js.undefined
+    private var ref = Ref[Div]
     val toggle: Callback =
       $.modState(s => s.copy(open = !s.open))
 
@@ -77,7 +77,7 @@ object MuiPopoverDemo {
             originChoices.map(_.menu(S)).toVdomArray,
             MuiPopover(
               open = S.open,
-              anchorEl = ref,
+              anchorEl = ref.unsafeGet(),
               anchorOrigin = S.anchor,
               targetOrigin = S.target,
               onRequestClose = (s: String) => toggle
