@@ -98,7 +98,7 @@ lazy val core =
         "com.github.japgolly.scalajs-react" %%% "extra"       % "1.2.0" withSources (),
         "com.github.japgolly.scalacss"      %%% "core"        % "0.5.5" withSources (),
         "com.github.japgolly.scalacss"      %%% "ext-react"   % "0.5.5" withSources (),
-        "org.scala-js"                      %%% "scalajs-dom" % "0.9.4" withSources (),
+        "org.scala-js"                      %%% "scalajs-dom" % "0.9.5" withSources (),
         "org.scalacheck"                    %%% "scalacheck"  % "1.14.0" % Test,
         "org.scalatest"                     %%% "scalatest"   % "3.0.5" % Test
       )
