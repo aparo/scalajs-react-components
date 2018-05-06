@@ -2,6 +2,27 @@ package com.olvind
 
 case object DomNode    extends DomType("")
 case object DomElement extends DomType("FromHtml")
+
+case object DomTableCell extends DomType("FromHtml") {
+  override val props = super.props ++
+    Seq(
+      ParsedProp(
+        PropName("colspan"),
+        baseType = Normal("Int"),
+        commentOpt = Some(
+          PropComment(
+            "Specifies the number of columns a cell should span"))
+      ),
+      ParsedProp(
+        PropName("rowspan"),
+        baseType = Normal("Int"),
+        commentOpt = Some(
+          PropComment(
+            "Sets the number of rows a cell should span"))
+      )
+    )
+}
+
 case object DomInput extends DomType("FromInput") {
 
   private val formMethodType =
@@ -130,7 +151,7 @@ case object DomInput extends DomType("FromInput") {
           "Refers to a <datalist> element that contains pre-defined options for an <input> element"))
       ),
       ParsedProp(PropName("max"),
-                 baseType = Normal("Long | String"),
+                 baseType = Normal("Float | String"),
                  commentOpt =
                    Some(PropComment("Specifies the maximum value for an <input> element"))),
       ParsedProp(
@@ -140,7 +161,7 @@ case object DomInput extends DomType("FromInput") {
           PropComment("Specifies the maximum number of characters allowed in an <input> element"))),
       ParsedProp(
         PropName("min"),
-        baseType = Normal("Long | String"),
+        baseType = Normal("Float | String"),
         commentOpt = Some(PropComment("Specifies a minimum value for an <input> element"))),
       ParsedProp(
         PropName("multiple"),
@@ -187,7 +208,7 @@ case object DomInput extends DomType("FromInput") {
             "Specifies the URL of the image to use as a submit button (only for type='image')"))
       ),
       ParsedProp(PropName("step"),
-                 baseType = Normal("Int"),
+                 baseType = Normal("Float | String"),
                  commentOpt =
                    Some(PropComment("Specifies the legal number intervals for an input field"))),
       ParsedProp(PropName("type"),
