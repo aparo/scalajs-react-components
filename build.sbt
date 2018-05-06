@@ -147,8 +147,8 @@ lazy val root =
 
 lazy val commonSettings =
   Seq(
-    scalaVersion := "2.12.5",
-    version := "1.1.0-SNAPSHOT",
+    scalaVersion := "2.12.6",
+    version := "1.2.0-SNAPSHOT",
     name := "scalajs-react-components",
     organization := "com.olvind",
     homepage := Some(url("http://chandu0101.github.io/scalajs-react-components")),
