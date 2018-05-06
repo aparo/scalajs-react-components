@@ -5,7 +5,7 @@ package materialui
 import chandu0101.macros.tojs.GhPagesMacros
 import chandu0101.scalajs.react.components.materialui._
 import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.prefix_<^._
+import japgolly.scalajs.react.vdom.html_<^._
 
 import scala.scalajs.js
 
@@ -16,10 +16,10 @@ object MuiDrawerDemo {
   // EXAMPLE:START
 
   case class State(
-    selected: js.UndefOr[String],
-    isOpen:   Boolean,
-    isDocked: Boolean,
-    isRight:  Boolean
+      selected: js.UndefOr[String],
+      isOpen: Boolean,
+      isDocked: Boolean,
+      isRight: Boolean
   )
 
   case class Choice(id: String, text: String)
@@ -31,17 +31,17 @@ object MuiDrawerDemo {
     Choice("4", "Fourth option")
   )
 
-  class Backend($: BackendScope[Unit, State]) {
+  class Backend($ : BackendScope[Unit, State]) {
     val toggleOpenCb: Callback =
       $.modState(s => s.copy(isOpen = !s.isOpen))
 
-    val toggleOpen: (ReactEventI, Boolean) => Callback =
+    val toggleOpen: (ReactMouseEvent, Boolean) => Callback =
       (e, b) => toggleOpenCb
 
-    val toggleDocked: (ReactEventI, Boolean) => Callback =
+    val toggleDocked: (ReactMouseEvent, Boolean) => Callback =
       (e, b) => $.modState(s => s.copy(isDocked = !s.isDocked))
 
-    val toggleRight: (ReactEventI, Boolean) => Callback =
+    val toggleRight: (ReactMouseEvent, Boolean) => Callback =
       (e, b) => $.modState(s => s.copy(isRight = !s.isRight))
 
     val onRequestChange: (Boolean, String) => Callback =
@@ -49,7 +49,7 @@ object MuiDrawerDemo {
         Callback.info(s"onRequestChange: open: $open, reason: $reason") >>
         toggleOpenCb
 
-    val selectItem: String => ReactTouchEventH => Callback =
+    val selectItem: String => ReactEvent => Callback =
       id => e => $.modState(s => s.copy(selected = id))
 
     def render(S: State) = {
@@ -58,60 +58,54 @@ object MuiDrawerDemo {
           <.div(
             MuiDrawer(
               onRequestChange = onRequestChange,
-              openSecondary   = S.isRight,
-              open            = S.isOpen,
-              docked          = S.isDocked)(
+              openSecondary = S.isRight,
+              open = S.isOpen,
+              docked = S.isDocked
+            )(
               /* hack in a cheesy centered avatar */
               MuiAvatar(
-                key             = "avatar",
-                size            = 112,
+                key = "avatar",
+                size = js.defined(112),
                 backgroundColor = Mui.Styles.colors.red400,
-                style           = js.Dynamic.literal(
-                  margin  = "auto",
-                  display = "block",
-                  padding = "10px"
-                ))(":D"),
-              choices map (c =>
-                MuiMenuItem(
-                  key         = c.id,
-                  primaryText = c.text,
-                  checked     = S.selected == c.id,
-                  onTouchTap  = selectItem(c.id)
-                )()
-              )
+                style = js.Dynamic.literal(margin = "auto", display = "block", padding = "10px")
+              )(js.defined(":D")),
+              choices
+                .map(
+                  c =>
+                    MuiMenuItem(
+                      key = c.id,
+                      primaryText = js.defined(c.text),
+                      checked = S.selected == js.defined(c.id),
+                      onClick = selectItem(c.id)
+                    )())
+                .toVdomArray
             ),
-
-            MuiToggle(
-              key      = "toggle1",
-              toggled  = S.isOpen,
-              label    = "Show drawer",
-              onToggle = toggleOpen
-            )(),
-            MuiToggle(
-              key      = "toggle2",
-              toggled  = S.isDocked,
-              label    = "Show docked",
-              onToggle = toggleDocked
-            )(),
-            MuiToggle(
-              key      = "toggle3",
-              toggled  = S.isRight,
-              label    = "Show on right side",
-              onToggle = toggleRight
-            )()
+            MuiToggle(key = "toggle1",
+                      toggled = S.isOpen,
+                      label = js.defined("Show drawer"),
+                      onToggle = toggleOpen)(),
+            MuiToggle(key = "toggle2",
+                      toggled = S.isDocked,
+                      label = js.defined("Show docked"),
+                      onToggle = toggleDocked)(),
+            MuiToggle(key = "toggle3",
+                      toggled = S.isRight,
+                      label = js.defined("Show on right side"),
+                      onToggle = toggleRight)()
           )
         )
       )
     }
   }
 
-  val component = ReactComponentB[Unit]("MuiDrawerDemo")
+  val component = ScalaComponent
+    .builder[Unit]("MuiDrawerDemo")
     .initialState(
       State(
         selected = js.undefined,
-        isOpen   = false,
+        isOpen = false,
         isDocked = false,
-        isRight  = false
+        isRight = false
       )
     )
     .renderBackend[Backend]

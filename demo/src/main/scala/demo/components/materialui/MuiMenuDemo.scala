@@ -5,72 +5,82 @@ package materialui
 import chandu0101.macros.tojs.GhPagesMacros
 import chandu0101.scalajs.react.components.materialui._
 import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.prefix_<^._
+import japgolly.scalajs.react.vdom.html_<^._
 
 import scala.scalajs.js
+import scala.scalajs.js.|
 
 object MuiMenuDemo {
   val code = GhPagesMacros.exampleSource
 
   // EXAMPLE:START
-
-  case class State(isOpen: Boolean, multiple: Set[String]){
-    def touched(us: js.UndefOr[String]) = us.fold(this){
-      case s if multiple contains s =>
-        copy(multiple = multiple - s)
-      case s =>
-        copy(multiple = multiple + s)
-    }
+  sealed abstract class Value
+  object Value {
+    case object Bold   extends Value
+    case object Italic extends Value
+    case object Under  extends Value
+    case object Strike extends Value
+    case object Super  extends Value
+    case object Sub    extends Value
+    case object Align  extends Value
   }
 
-  class Backend($: BackendScope[Unit, State]) {
+  case class State(isOpen: Boolean, values: js.Array[Value])
+
+  class Backend($ : BackendScope[Unit, State]) {
     val toggleOpen: ReactEvent => Callback =
       e => $.modState(s => s.copy(isOpen = !s.isOpen))
 
-    val onTouchTap: (ReactUIEventH, JsComponentM[HasValue[String], _, TopNode]) => Callback =
-      (e, elem) => $.modState(_.touched(elem.props.value))
+    val onChange: (TouchTapEvent, Value | js.Array[Value]) => Callback =
+      (e, values) =>
+        values match {
+          case v: Value            => $.modState(_.copy(values = js.Array(v)))
+          case vs: js.Array[Value] => $.modState(_.copy(values = vs))
+      }
 
-    def renderOpen(S: State) =
+    def renderOpen(S: State) = {
       <.div(
         MuiFlatButton(
-          label      = "Close menu",
-          onTouchTap = toggleOpen
+          label = "Close menu",
+          onClick = toggleOpen
         )(),
-        MuiMenu[String](
-          desktop        = true,
-          width          = 320,
-          value          = S.multiple.toJsArray,
-          multiple       = true,
-          openDirection  = Corners.bottom_right,
-          onItemTouchTap = onTouchTap,
-          onKeyDown      = CallbackDebug.f1("onKeyDown"),
-          onEscKeyDown   = toggleOpen
+        MuiMenu[Value](
+          width = 320,
+          value = S.values,
+          desktop = true,
+          multiple = true,
+          onEscKeyDown = toggleOpen,
+          onChange = js.defined(onChange)
         )(
-          MuiMenuItem(value = "bold",   secondaryText = "⌘B", checked = true)("Bold"),
-          MuiMenuItem(value = "italic", secondaryText = "⌘I")("Italic"),
-          MuiMenuItem(value = "under",  secondaryText = "⌘U")("Underline"),
-          MuiMenuItem(value = "strike", secondaryText = "Alt+Shift+5")("Strikethrough"),
-          MuiMenuItem(value = "super",  secondaryText = "⌘.")("Superscript"),
-          MuiMenuItem(value = "sub",    secondaryText = "⌘,")("Subscript"),
+          MuiMenuItem(value = Value.Bold, secondaryText = js.defined("⌘B"))("Bold"),
+          MuiMenuItem(value = Value.Italic, secondaryText = js.defined("⌘I"))("Italic"),
+          MuiMenuItem(value = Value.Under, secondaryText = js.defined("⌘U"))("Underline"),
+          MuiMenuItem(value = Value.Strike, secondaryText = js.defined("Alt+Shift+5"))(
+            "Strikethrough"),
+          MuiMenuItem(value = Value.Super, secondaryText = js.defined("⌘."))("Superscript"),
+          MuiMenuItem(value = Value.Sub, secondaryText = js.defined("⌘,"))("Subscript"),
           MuiDivider()(),
-          MuiMenuItem(value = "align")("Align")
+          MuiMenuItem(value = Value.Align)("Align")
         )
       )
+    }
 
     def renderClosed(S: State) =
       MuiFlatButton(
         label = "open menu",
-        onTouchTap = toggleOpen
+        onClick = toggleOpen
       )()
 
     def render(S: State) =
       CodeExample(code, "MuiMenu")(
-        if (S.isOpen) renderOpen(S) else renderClosed(S)
-    )
+        if (S.isOpen) renderOpen(S) else renderClosed(S),
+        s"Has chosen: ${S.values.mkString(", ")}"
+      )
   }
 
-  val component = ReactComponentB[Unit] ("MuiMenuDemo")
-    .initialState(State(isOpen = false, Set.empty))
+  val component = ScalaComponent
+    .builder[Unit]("MuiMenuDemo")
+    .initialState(State(isOpen = false, values = js.Array[Value](Value.Bold)))
     .renderBackend[Backend]
     .build
 

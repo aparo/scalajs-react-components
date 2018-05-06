@@ -4,11 +4,10 @@ import chandu0101.macros.tojs.GhPagesMacros
 import chandu0101.scalajs.react.components.materialui._
 import demo.components.CodeExample
 import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.prefix_<^._
+import japgolly.scalajs.react.vdom.html_<^._
 
 import scala.scalajs.js
 import scala.scalajs.js.`|`
-
 
 object MuiTableDemo {
   val code = GhPagesMacros.exampleSource
@@ -16,22 +15,23 @@ object MuiTableDemo {
   // EXAMPLE:START
 
   case class State(
-    fixedHeader: Boolean,
-    fixedFooter: Boolean,
-    stripedRows: Boolean,
-    showRowHover: Boolean,
-    selectable: Boolean,
-    multiSelectable: Boolean,
-    enableSelectAll: Boolean,
-    deselectOnClickaway: Boolean,
-    height: String,
-    selected: String | js.Array[Int]
+      fixedHeader: Boolean,
+      fixedFooter: Boolean,
+      stripedRows: Boolean,
+      showRowHover: Boolean,
+      selectable: Boolean,
+      multiSelectable: Boolean,
+      enableSelectAll: Boolean,
+      deselectOnClickaway: Boolean,
+      height: String,
+      selected: String | js.Array[Int]
   )
 
-  case class Backend($: BackendScope[Unit, State]) {
+  case class Backend($ : BackendScope[Unit, State]) {
     val onRowSelection: String | js.Array[Int] => Callback =
-      rows => $.modState(_.copy(selected = rows)) >>
-        Callback.info(s"selected $rows")
+      rows =>
+        $.modState(_.copy(selected = rows)) >>
+          Callback.info(s"selected $rows")
 
     val toggleMultiSelectable: (ReactEvent, Boolean) => Callback =
       (e, b) => $.modState(_.copy(multiSelectable = b))
@@ -61,37 +61,38 @@ object MuiTableDemo {
       Person("7", "Adam Moore", "Employed")
     )
 
-    def renderPersons(selecteds: String | js.Array[Int]): List[ReactComponentU_] =
+    def renderPersons(selecteds: String | js.Array[Int]): Seq[VdomNode] =
       persons.zipWithIndex.map {
         case (p, idx) =>
           val selected = selecteds match {
             case a: js.Array[_] => a.contains(idx)
-            case all => true
+            case all            => true
           }
           MuiTableRow(selected = selected)(
             MuiTableRowColumn()(p.id),
             MuiTableRowColumn()(p.name),
             MuiTableRowColumn()(p.status)
-          )
+          ): VdomNode
       }
 
     def render(S: State) =
       CodeExample(code, "MuiTable")(
         <.div(
           MuiTable(
-            key                 = S.toString,
-            height              = S.height,
-            fixedHeader         = S.fixedHeader,
-            fixedFooter         = S.fixedFooter,
-            selectable          = S.selectable,
-            multiSelectable     = S.multiSelectable,
-            onRowSelection      = onRowSelection
+            key = S.toString,
+            height = S.height,
+            fixedHeader = S.fixedHeader,
+            fixedFooter = S.fixedFooter,
+            selectable = S.selectable,
+            multiSelectable = S.multiSelectable,
+            onRowSelection = onRowSelection
           )(
             MuiTableHeader(enableSelectAll = S.enableSelectAll)(
               MuiTableRow()(
                 MuiTableHeaderColumn(
                   tooltip = "Super Header",
-                  style = js.Dynamic.literal("textAlign" -> "center"))()
+                  style = js.Dynamic.literal("textAlign" -> "center")
+                )()
               ),
               colNames
             ),
@@ -100,41 +101,42 @@ object MuiTableDemo {
               showRowHover = S.showRowHover,
               stripedRows = S.stripedRows
             )(
-              renderPersons(S.selected) :_*
+              renderPersons(S.selected): _*
             ),
             MuiTableFooter()(
               colNames,
               MuiTableRow(style = js.Dynamic.literal("textAlign" -> "center"))()
             )
           ),
-          MuiPaper(rounded = true, style = js.Dynamic.literal("width" -> "300", "padding" -> "20px"))(
+          MuiPaper(rounded = true,
+                   style = js.Dynamic.literal("width" -> "300", "padding" -> "20px"))(
             MuiToggle(
-              label = "selectable",
+              label = js.defined("selectable"),
               defaultToggled = S.selectable,
               onToggle = toggleSelectable
             )(),
             MuiToggle(
-              label = "multiSelectable",
+              label = js.defined("multiSelectable"),
               defaultToggled = S.multiSelectable,
               onToggle = toggleMultiSelectable
             )(),
             MuiToggle(
-              label = "enableSelectAll",
+              label = js.defined("enableSelectAll"),
               defaultToggled = S.enableSelectAll,
               onToggle = toggleEnableSelectAll
             )(),
             MuiToggle(
-              label = "deselectOnClickaway",
+              label = js.defined("deselectOnClickaway"),
               defaultToggled = S.deselectOnClickaway,
               onToggle = toggleDeselectOnClickaway
             )(),
             MuiToggle(
-              label = "fixedHeader",
+              label = js.defined("fixedHeader"),
               defaultToggled = S.fixedHeader,
               onToggle = toggleFixedHeader
             )(),
             MuiToggle(
-              label = "fixedFooter",
+              label = js.defined("fixedFooter"),
               defaultToggled = S.fixedFooter,
               onToggle = toggleFixedFooter
             )()
@@ -143,7 +145,8 @@ object MuiTableDemo {
       )
   }
 
-  val component = ReactComponentB[Unit]("MuiTableDemo")
+  val component = ScalaComponent
+    .builder[Unit]("MuiTableDemo")
     .initialState(State(
       fixedHeader = false,
       fixedFooter = false,

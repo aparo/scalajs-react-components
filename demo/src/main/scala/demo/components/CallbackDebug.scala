@@ -10,7 +10,7 @@ object CallbackDebug {
   }
   trait PrintLower {
     final implicit def PrintAny[T]: Print[T] =
-      new Print[T]{
+      new Print[T] {
         override def print(t: T): String =
           if (t == js.undefined) "undefined"
           else if (t == null) "null"
@@ -28,29 +28,41 @@ object CallbackDebug {
           val d = e.asInstanceOf[js.Dynamic]
           val u = js.undefined.asInstanceOf[js.Dynamic]
           val event =
-            if      (d.clipboardData != u) "ReactClipboardEvent"
-            else if (d.data != u)          "ReactCompositionEvent"
-            else if (d.dataTransfer != u)  "ReactDragEvent"
+            if (d.clipboardData != u) "ReactClipboardEvent"
+            else if (d.data != u) "ReactCompositionEvent"
+            else if (d.dataTransfer != u) "ReactDragEvent"
             else if (d.relatedTarget != u) "ReactFocusEvent"
-            else if (d.locale != u)        "ReactKeyboardEvent"
-            else if (d.buttons != u)       "ReactMouseEvent"
-            else if (d.touches != u)       "ReactTouchEvent"
-            else if (d.detail != u)        "ReactUIEvent"
-            else if (d.deltaZ != u)        "ReactWheelEvent"
-            else                           "ReactEvent"
+            else if (d.locale != u) "ReactKeyboardEvent"
+            else if (d.buttons != u) "ReactMouseEvent"
+            else if (d.touches != u) "ReactTouchEvent"
+            else if (d.detail != u) "ReactUIEvent"
+            else if (d.deltaZ != u) "ReactWheelEvent"
+            else "ReactEvent"
 
           val t = e.target.asInstanceOf[js.Dynamic]
           val target =
-            if      (t.value     != u) "I"
+            if (t.value != u) "I"
             else if (t.offsetTop != u) "H"
-            else                       ""
-          s"$event$target: t.value: ${t.value}, t.offsetTop: ${t.offsetTop}"
+            else ""
+
+          val values = js.Object.keys(e).map{
+            key =>
+              val valueU: js.Any = e.asInstanceOf[js.Dictionary[js.Any]](key)
+
+              val valueS = if (js.isUndefined(valueU)) "empty"
+              else if (js.typeOf(valueU) == "function") "function"
+              else util.Try(js.JSON.stringify(valueU)).getOrElse("circular")
+
+              s"$key: $valueS"
+          }
+
+          s"$event$target: ${values.mkString("{", ", ", "}")}"
         }
       }
   }
 
   private def base(name: String, params: String*): Callback =
-    Callback.info(s"Event handler: $name(${params.mkString(", ")})")
+    Callback.warn(s"Event handler: $name(${params.mkString(", ")})")
 
   def f0(name: String): Callback =
     base(name)
