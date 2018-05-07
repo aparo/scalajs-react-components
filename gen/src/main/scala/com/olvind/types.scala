@@ -67,6 +67,6 @@ object Identifier {
     else {
       m
     }
-    Identifier(memberName.replaceAll("[-/]", "_"))
+    Identifier(memberName.replaceAll("[-/]", "_").take(50))
   }
 }

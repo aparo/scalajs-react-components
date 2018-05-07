@@ -104,6 +104,7 @@ object SuiTypeMapper extends TypeMapper {
       case ("RadioButtonGroup", "valueSelected", "any") => Normal("js.Any")
       case ("Stepper", "children", "arrayOf(node)") => Normal("VdomElement")
       /*Added by roberto@leibman.net*/
+      case ("Advertisement", "unit", _) => Enum(compName, Seq("medium", "rectanglelarge", "rectanglevertical", "rectanglesmall", "rectanglemobile", "bannerbannervertical", "bannertop", "bannerhalf", "bannerbuttonsquare", "buttonsmall", "buttonskyscraperwide", "skyscraperleaderboardlarge", "leaderboardmobile", "leaderboardbillboardpanoramanetboardhalf", "pagesquaresmall", "square"), "SuiAdvertisementUnit")
       case ("DatePicker", "utils", "object") => Normal("DatePickerUtils") //TODO ???
       case ("SelectField", "dropDownMenuProps", "object") => Normal("DropDownMenuProps") //TODO ???
       case (_, _, "_lib.customcontentShorthand") => Normal("js.Any") //TODO write this Missing in TypeMapper
@@ -138,15 +139,15 @@ object SuiTypeMapper extends TypeMapper {
       case ("Grid", "divided", _) => Normal("js.Any") //TODO Enum, vertically
       case ("Grid", "padded", _) => Enum(compName, Seq("horizontally", "vertically"), "SuiHorizontallyOrVertically")
       case ("Grid", "relaxed", _) => Normal("js.Any") //TODO Enum, very
-      case ("Grid","reversed","_lib.custommultipleProp(['computer', 'computer vertically', 'mobile', 'mobile vertically', 'tablet', 'tablet vertically'])") => Normal("js.Any") //TODO write this Missing in TypeMapper
-      case ("GridColumn","only","_lib.custommultipleProp(_lib.SUI.VISIBILITY)") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Grid", "reversed", "_lib.custommultipleProp(['computer', 'computer vertically', 'mobile', 'mobile vertically', 'tablet', 'tablet vertically'])") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("GridColumn", "only", "_lib.custommultipleProp(_lib.SUI.VISIBILITY)") => Normal("js.Any") //TODO write this Missing in TypeMapper
       case ("ListItem", "icon", "_lib.customevery([_lib.customdisallow(['image']), _lib.customitemShorthand])") => Normal("js.Any") //TODO write this Missing in TypeMapper
       case ("ListItem", "image", "_lib.customevery([_lib.customdisallow(['icon']), _lib.customitemShorthand])") => Normal("js.Any") //TODO write this Missing in TypeMapper
       case ("Modal", "actions", "Mui.arrayOf(_lib.customitemShorthand)") => Normal("js.Any") //TODO write this Missing in TypeMapper
       case ("Modal", "dimmer", _) => Enum(compName, Seq("inverted", "blurring"), "SuiModalDimmer")
       case ("Modal", "mountNode", "Mui.any") => Normal("js.Any") //TODO write this Missing in TypeMapper
       case ("ModalActions", "actions", "_lib.customevery([_lib.customdisallow(['children']), Mui.arrayOf(_lib.customitemShorthand)])") => Normal("js.Any") //TODO write this Missing in TypeMapper
-      case ("ModalActions","onActionClick","_lib.customevery([_lib.customdisallow(['children']), Mui.func])") => Normal("ReactEvent => Callback") //TODO write this Missing in TypeMapper
+      case ("ModalActions", "onActionClick", "_lib.customevery([_lib.customdisallow(['children']), Mui.func])") => Normal("ReactEvent => Callback") //TODO write this Missing in TypeMapper
       case ("Radio", "slider", "_Checkbox2.default.propTypes.slider") => Normal("js.Any") //TODO write this Missing in TypeMapper
       case ("Radio", "toggle", "_Checkbox2.default.propTypes.toggle") => Normal("js.Any") //TODO write this Missing in TypeMapper
       case ("Radio", "type", "_Checkbox2.default.propTypes.type") => Normal("js.Any") //TODO write this Missing in TypeMapper
@@ -154,23 +155,40 @@ object SuiTypeMapper extends TypeMapper {
       case ("Checkbox", "radio", "_lib.customevery([Mui.bool, _lib.customdisallow(['slider', 'toggle'])])") => Normal("Boolean") //TODO write this Missing in TypeMapper
       case ("Checkbox", "slider", "_lib.customevery([Mui.bool, _lib.customdisallow(['radio', 'toggle'])])") => Normal("Boolean") //TODO write this Missing in TypeMapper
       case ("Checkbox", "toggle", "_lib.customevery([Mui.bool, _lib.customdisallow(['radio', 'slider'])])") => Normal("Boolean") //TODO write this Missing in TypeMapper
-      case ("Popup","on", _) => Normal("js.Any") //TODO Enum, hover, click or focus
-      case ("Popup","wide", _) => Normal("js.Any") //TODO Enum, very
-      case ("Table","basic", _) => Normal("js.Any") //TODO Enum, very
-      case ("Table","compact", _) => Normal("js.Any") //TODO Enum, very
-      case ("Table","padded", _) => Normal("js.Any") //TODO Enum, very
-      case ("Table","renderBodyRow","_lib.customevery([_lib.customdisallow(['children']), _lib.customdemand(['tableData']), Mui.func])") => Normal("js.Any") //TODO write this Missing in TypeMapper
-      case ("Table","tableData","_lib.customevery([_lib.customdisallow(['children']), _lib.customdemand(['renderBodyRow']), Mui.array])") => Normal("js.Any") //TODO write this Missing in TypeMapper
-      case ("GridRow","only","_lib.custommultipleProp(_lib.SUI.VISIBILITY)") => Normal("js.Any") //TODO write this Missing in TypeMapper
-      case ("GridRow","reversed","_lib.custommultipleProp(['computer', 'computer vertically', 'mobile', 'mobile vertically', 'tablet', 'tablet vertically'])") => Normal("js.Any") //TODO write this Missing in TypeMapper
-      case ("Label","corner", _) => Enum(compName, Seq("left", "right"), "LeftRight")
-      case ("Label","empty","_lib.customevery([Mui.bool, _lib.customdemand(['circular'])])") => Normal("js.Any") //TODO write this Missing in TypeMapper
-      case ("Label","pointing", _) => Normal("js.Any") //TODO enum above, below, left, right
-      case ("Label","ribbon", _) => Enum(compName, Seq("left", "right"), "LeftRight")
-      case ("Search","results", _) => Normal("js.Object | js.Array[js.Object]") //TODO One of:  - array of Search.Result props e.g. `{ title: '', description: '' }` or     - object of categories e.g. `{ name: '', results: [{ title: '', description: '' }]`
-      case ("SearchCategory","results","Mui.array") => Normal("js.Array[js.Object]") //TODO write this Missing in TypeMapper
+      case ("Popup", "on", _) => Normal("js.Any") //TODO Enum, hover, click or focus
+      case ("Popup", "wide", _) => Normal("js.Any") //TODO Enum, very
+      case ("Table", "basic", _) => Normal("js.Any") //TODO Enum, very
+      case ("Table", "compact", _) => Normal("js.Any") //TODO Enum, very
+      case ("Table", "padded", _) => Normal("js.Any") //TODO Enum, very
+      case ("Table", "renderBodyRow", "_lib.customevery([_lib.customdisallow(['children']), _lib.customdemand(['tableData']), Mui.func])") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Table", "tableData", "_lib.customevery([_lib.customdisallow(['children']), _lib.customdemand(['renderBodyRow']), Mui.array])") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("GridRow", "only", "_lib.custommultipleProp(_lib.SUI.VISIBILITY)") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("GridRow", "reversed", "_lib.custommultipleProp(['computer', 'computer vertically', 'mobile', 'mobile vertically', 'tablet', 'tablet vertically'])") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Label", "corner", _) => Enum(compName, Seq("left", "right"), "LeftRight")
+      case ("Label", "empty", "_lib.customevery([Mui.bool, _lib.customdemand(['circular'])])") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Label", "pointing", _) => Normal("js.Any") //TODO enum above, below, left, right
+      case ("Label", "ribbon", _) => Enum(compName, Seq("left", "right"), "LeftRight")
+      case ("Search", "results", _) => Normal("js.Object | js.Array[js.Object]") //TODO One of:  - array of Search.Result props e.g. `{ title: '', description: '' }` or     - object of categories e.g. `{ name: '', results: [{ title: '', description: '' }]`
+      case ("SearchCategory", "results", "Mui.array") => Normal("js.Array[js.Object]") //TODO write this Missing in TypeMapper
       case (_, "attached", _) => Enum(compName, Seq("left", "right", "top", "bottom"), "SuiFourDirections")
-      case (_,"onItemClick","_lib.customevery([_lib.customdisallow(['children']), Mui.func])") =>
+
+      case ("Loader", "inline", "Mui.oneOf") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Loader", "inline", "centered") => Normal("js.Any") //TODO write this Missing in TypeMapper      case ("Progress","percent","_lib.customdisallow") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Progress", "percent", "total") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Progress", "percent", "value") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Progress", "progress", "Mui.oneOf") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Progress", "progress", "percent") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Progress", "progress", "ratio") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Progress", "progress", "value") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Progress", "total", "_lib.customdemand") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Progress", "total", "value") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Progress", "total", "_lib.customdisallow") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Progress", "total", "percent") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Progress", "value", "_lib.customdisallow") => Normal("js.Any") //TODO write this Missing in TypeMapper
+      case ("Progress", "value", "percent") => Normal("js.Any") //TODO write this Missing in TypeMapper
+
+
+      case (_, "onItemClick", "_lib.customevery([_lib.customdisallow(['children']), Mui.func])") =>
         Normal(SuiTypeMapperFunction(compName, fieldName))
       case (_, _, "Mui.func") =>
         Normal(SuiTypeMapperFunction(compName, fieldName))
