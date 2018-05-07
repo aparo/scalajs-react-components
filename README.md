@@ -46,9 +46,9 @@ MuiRaisedButton(label = "label")()
 Add these dependencies to you sbt build file
 ```scala
 libraryDependencies ++= Seq(
-  "com.github.japgolly.scalajs-react" %%% "core" % "1.1.0",
-  "com.github.japgolly.scalajs-react" %%% "extra" % "1.1.0",
-  "com.olvind" %%% "scalajs-react-components" % "1.1.0"
+  "com.github.japgolly.scalajs-react" %%% "core" % "1.2.0",
+  "com.github.japgolly.scalajs-react" %%% "extra" % "1.2.0",
+  "com.olvind" %%% "scalajs-react-components" % "1.2.0-SNAPSHOT"
 )
 ```
 
