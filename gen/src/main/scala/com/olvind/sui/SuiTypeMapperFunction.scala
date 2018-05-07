@@ -28,6 +28,7 @@ object SuiTypeMapperFunction {
       case ("Search", "onSelectionChange") => "(ReactEvent, js.Object) => Callback"
       case ("Search", "categoryRenderer") => "js.Object => js.Any"
       case ("Search", "resultRenderer") => "js.Object => js.Any"
+      case ("Dimmer", "onClickOutside") => Callback //TODO more specific?
       case (_, "onClick") => "ReactMouseEventFromInput => Callback"
       case (_, "onMouseDown") => "ReactMouseEventFromInput => Callback"
       case (_, "onMouseUp") => "ReactMouseEventFromInput => Callback"

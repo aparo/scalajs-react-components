@@ -29,13 +29,13 @@ case class SuiLibrary(base: Path) extends Library {
       //      ComponentDef(CompName("leven")),
       //      ComponentDef(CompName("Select")),
 
-      //      ComponentDef(CompName("Accordion")),
-      //      ComponentDef(CompName("AccordionContent")),
-      //      ComponentDef(CompName("AccordionTitle")),
-      //      ComponentDef(CompName("Advertisement")),
-      //      ComponentDef(CompName("Breadcrumb")),
-      //      ComponentDef(CompName("BreadcrumbDivider")),
-      //      ComponentDef(CompName("BreadcrumbSection")),
+      ComponentDef(CompName("Accordion")),
+      ComponentDef(CompName("AccordionContent")),
+      ComponentDef(CompName("AccordionTitle")),
+//      ComponentDef(CompName("Advertisement")), //TODO the unit enum name ends up too long, we need to figure out how to cap it
+      ComponentDef(CompName("Breadcrumb")),
+      ComponentDef(CompName("BreadcrumbDivider")),
+      ComponentDef(CompName("BreadcrumbSection")),
       ComponentDef(CompName("Button"), domeTypeOpt = Some(DomInput)),
       ComponentDef(CompName("ButtonContent")),
       ComponentDef(CompName("ButtonGroup")),
@@ -58,8 +58,8 @@ case class SuiLibrary(base: Path) extends Library {
       //      ComponentDef(CompName("CommentText")),
       ComponentDef(CompName("Confirm")),
       ComponentDef(CompName("Container")),
-      //      ComponentDef(CompName("Dimmer")),
-      //      ComponentDef(CompName("DimmerDimmable")),
+      ComponentDef(CompName("Dimmer")),
+      ComponentDef(CompName("DimmerDimmable")),
       ComponentDef(CompName("Divider")),
       ComponentDef(CompName("Dropdown")),
       ComponentDef(CompName("DropdownDivider")),
@@ -91,8 +91,8 @@ case class SuiLibrary(base: Path) extends Library {
       ComponentDef(CompName("GridColumn")),
       ComponentDef(CompName("GridRow")),
       ComponentDef(CompName("Header")),
-      //      ComponentDef(CompName("HeaderContent")),
-      //      ComponentDef(CompName("HeaderSubheader")),
+      ComponentDef(CompName("HeaderContent")),
+      ComponentDef(CompName("HeaderSubheader")),
       icon,
       ComponentDef(CompName("IconGroup")),
       ComponentDef(CompName("Image")),
@@ -116,7 +116,7 @@ case class SuiLibrary(base: Path) extends Library {
       ComponentDef(CompName("ListIcon"), shared = Some(icon)),
       ComponentDef(CompName("ListItem")),
       //      ComponentDef(CompName("ListList")),
-      //      ComponentDef(CompName("Loader")),
+      ComponentDef(CompName("Loader")),
       ComponentDef(CompName("Menu")),
       ComponentDef(CompName("MenuHeader")),
       ComponentDef(CompName("MenuItem")),
@@ -135,7 +135,7 @@ case class SuiLibrary(base: Path) extends Library {
       ComponentDef(CompName("PopupContent")),
       ComponentDef(CompName("PopupHeader")),
       //      ComponentDef(CompName("Portal")),
-      //      ComponentDef(CompName("Progress")),
+      ComponentDef(CompName("Progress")),
       ComponentDef(CompName("Radio")),
       //      ComponentDef(CompName("Rail")),
       ComponentDef(CompName("Rating")),
@@ -168,6 +168,7 @@ case class SuiLibrary(base: Path) extends Library {
       ComponentDef(CompName("TableHeader"), domeTypeOpt = Some(DomElement)),
       ComponentDef(CompName("TableHeaderCell"), domeTypeOpt = Some(DomTableCell), forceChildren = true), //We need to add a few items to cells, including rowspan, colspan, etc.
       ComponentDef(CompName("TableRow"), domeTypeOpt = Some(DomElement)),
-      ComponentDef(CompName("TextArea")) //      ComponentDef(CompName("Visibility"))
+      ComponentDef(CompName("TextArea"))
+      //      ComponentDef(CompName("Visibility"))
     )
 }
